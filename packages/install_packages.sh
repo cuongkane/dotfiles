@@ -1,9 +1,8 @@
 source "packages/brew/install_brew.sh"
-brew bundle --file=packages/Brewfile
+brew bundle --file=packages/Brewfile --no-upgrade
 
 source "packages/zsh/install_zsh.sh"
 source "packages/xcode/install_xcode.sh"
-source "packages/brew/install_brew.sh"
 source "packages/pyenv/install_pyenv.sh"
 source "packages/npm/install_npm.sh"
 source "packages/neovim/install_neovim.sh"

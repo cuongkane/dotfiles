@@ -3,6 +3,12 @@ if ! is_installed npm; then
 fi
 print_package_version npm
 
-npm install -g yarn
-npm install -g typescript
-npm install -g typescript typescript-language-server
+npm_install_if_missing() {
+  if ! is_installed "$1"; then
+    npm install -g "$1"
+  fi
+}
+
+npm_install_if_missing yarn
+npm_install_if_missing tsc
+npm_install_if_missing typescript-language-server
