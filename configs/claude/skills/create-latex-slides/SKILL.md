@@ -27,6 +27,30 @@ Build a presentation-ready Beamer deck using a proven template (UTU theme, 16:9)
 
 ## Workflow
 
+### 0. Prerequisites — check and install before anything else
+
+The skill depends on three external tools. Before building anything, verify they're installed. This takes seconds on a cached Homebrew install and prevents a failed-build debug loop later.
+
+```bash
+command -v pdflatex     >/dev/null && echo "pdflatex: ok"     || echo "pdflatex: MISSING"
+command -v rsvg-convert >/dev/null && echo "rsvg-convert: ok" || echo "rsvg-convert: MISSING"
+command -v pdfinfo      >/dev/null && echo "pdfinfo: ok"      || echo "pdfinfo: MISSING"
+```
+
+Install whatever's missing. Ask the user for confirmation before installing system-level packages — `brew install` and `apt install` change their machine.
+
+| Tool | Purpose | Install (macOS) | Install (Debian/Ubuntu) |
+|------|---------|-----------------|-------------------------|
+| `pdflatex` | LaTeX compiler (required) | `brew install --cask mactex-no-gui` (full, ~4 GB) **or** `brew install basictex` (small; then `sudo tlmgr install beamer collection-fontsrecommended`) | `sudo apt install texlive-latex-extra texlive-fonts-recommended` |
+| `rsvg-convert` | SVG → PDF (required only if the deck has SVGs) | `brew install librsvg` | `sudo apt install librsvg2-bin` |
+| `pdfinfo` | Page-count reporting (optional; `build.sh` uses it) | `brew install poppler` | `sudo apt install poppler-utils` |
+
+If the user is on macOS without Homebrew, point them to https://brew.sh first — do **not** try to install Homebrew automatically, as it's a system-wide install that requires their explicit consent.
+
+If `pdflatex` is installed via `basictex` and a LaTeX package (e.g., `beamer`, `calligra`) is missing, the error looks like `! LaTeX Error: File \`X.sty' not found.` — install it with `sudo tlmgr install <pkg>`.
+
+When you install anything, call it out in your final message so the user knows their system state changed.
+
 ### 1. Understand the content
 
 If the user provides a source file (blog post, mdx, markdown, pdf), read it first. Extract:
@@ -64,6 +88,8 @@ The script auto-detects the signature dark colors (`#1a1a2e`, `#16213e`, etc.) a
 Reference the `.pdf` version in slides (not `.svg`): `\includegraphics[width=0.85\textwidth]{fig/pipeline_flow.pdf}`.
 
 **PNG/JPG** — drop into `fig/` and include normally.
+
+**WebP** — pdflatex doesn't read webp natively. If the image is just a frontmatter cover that isn't referenced in the body, skip it. Otherwise convert to PNG: `magick cover.webp cover.png` (requires `brew install imagemagick` / `sudo apt install imagemagick`).
 
 ### 4. Fill in slide content
 
@@ -126,6 +152,8 @@ It flags `lstlisting` without `[fragile]`, stray `\includesvg`, `auto-pst-pdf` u
 | `Package svg Error: Inkscape not detected` | Don't use `\includesvg`; pre-convert with rsvg-convert (build.sh does this) |
 | Image not found | Path should be `fig/<name>.pdf` (not `.svg`); check file exists |
 | Frame title overflows footer | Use `\title[short]{long form}` for the document title; keep frame titles under ~50 chars |
+| `! pdfTeX error: cannot find image file ... .webp` | Convert webp → PNG (`magick in.webp out.png`) or drop the image if it's a cosmetic cover |
+| `! LaTeX Error: File \`beamer.sty' not found.` | On BasicTeX: `sudo tlmgr install beamer collection-fontsrecommended` |
 
 ### 7. Preview
 
