@@ -6,3 +6,8 @@ vim/autoload/*
 tmux-client*.log
 tmux-server*.log
 AWSCLIV2.pkg
+
+# Transient holding dir from the previous whole-~/.claude symlink setup.
+# Remove the directory (and this entry) after running the manual migration
+# that restores ~/.claude as a real directory.
+configs/claude/home/
