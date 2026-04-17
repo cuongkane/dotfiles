@@ -1,0 +1,144 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer slide template (UTU theme, 16:9)             %
+% Replace placeholders below with your content.       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[aspectratio=169]{beamer}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+
+% core packages
+\usepackage{latexsym,amsmath,amssymb,xcolor,multicol,booktabs,calligra}
+\usepackage{graphicx,listings,stackengine}
+
+% Title / metadata — EDIT THIS
+% Tip: use \title[short]{long} — the short form goes in the footer so long
+% titles don't overflow. If the title is <~40 chars, one argument is enough.
+\author{AUTHOR NAME}
+\title[SHORT TITLE]{FULL TITLE OF THE PRESENTATION}
+\subtitle{OPTIONAL SUBTITLE}
+\institute{INSTITUTION OR URL}
+\date{\today}
+
+\usepackage{UTU}
+
+% convenience macros
+\def\cmd#1{\texttt{\color{red}\footnotesize $\backslash$#1}}
+\def\env#1{\texttt{\color{blue}\footnotesize #1}}
+\definecolor{utu_green}{RGB}{173,203,0}
+\definecolor{utu_blue}{RGB}{93,155,162}
+\definecolor{utu_pink}{RGB}{248,72,94}
+\definecolor{halfgray}{gray}{0.55}
+\definecolor{lightgray}{gray}{0.9}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\bfseries\color{utu_green},
+    emphstyle=\ttfamily\color{utu_blue},
+    stringstyle=\color{utu_pink},
+    numbers=left,
+    numberstyle=\small\color{halfgray},
+    rulesepcolor=\color{red!20!green!20!blue!20},
+}
+
+\begin{document}
+
+% ============================================================
+% TITLE
+% ============================================================
+\begin{frame}
+    {\small \titlepage}
+\end{frame}
+
+% ============================================================
+\section{SECTION 1 NAME}
+% ============================================================
+
+\begin{frame}{FRAME TITLE}
+    Short lead-in sentence.
+
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Point 1} -- brief detail
+        \item \textbf{Point 2} -- brief detail
+        \item \textbf{Point 3} -- brief detail
+    \end{itemize}
+
+    \vspace{0.3cm}
+    \colorbox{utu_green!20}{\parbox{0.9\textwidth}{
+        \centering
+        \textbf{Key takeaway goes here.}
+    }}
+\end{frame}
+
+\begin{frame}{Two-Column Layout Example}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Left heading}
+            \begin{itemize}
+                \item Bullet A
+                \item Bullet B
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Right heading}
+            \begin{itemize}
+                \item Bullet C
+                \item Bullet D
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Figure Example}
+    \begin{figure}[htpb]
+        \centering
+        \includegraphics[keepaspectratio, height=0.7\textheight]{fig/PLACEHOLDER.pdf}
+        \caption{Figure caption}
+    \end{figure}
+\end{frame}
+
+% ============================================================
+\section{SECTION 2 NAME}
+% ============================================================
+
+\begin{frame}[fragile]{Code Listing Example}
+    \begin{lstlisting}[language=Python,basicstyle=\ttfamily\footnotesize]
+def hello(name: str) -> str:
+    return f"Hello, {name}!"
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Table Example}
+    \begin{center}
+        \begin{tabular}{|l|c|c|}
+            \hline
+            \textbf{Metric} & \textbf{A} & \textbf{B} \\
+            \hline
+            Latency & 2ms & 5ms \\
+            \hline
+            Throughput & 10k/s & 4k/s \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+% ============================================================
+\section{Conclusion}
+% ============================================================
+
+\begin{frame}{Summary}
+    \begin{itemize}
+        \item Takeaway 1
+        \item Takeaway 2
+        \item Takeaway 3
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        {\Huge\calligra Thank You}
+    \end{center}
+\end{frame}
+
+\end{document}

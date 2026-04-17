@@ -15,3 +15,6 @@
     ~/.config/lazygit/config.yml: lazygit/config.yml
     ~/.config/alacritty/alacritty.toml: alacritty/alacritty.toml
     ~/.config/karabiner/karabiner.json: karabiner/karabiner.json
+    ~/.claude/commands: claude/commands
+    ~/.claude/skills: claude/skills
+    ~/.claude/agents: claude/agents
