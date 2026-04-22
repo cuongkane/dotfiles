@@ -5,6 +5,7 @@
 # ----------------------------
 brew "zoxide"
 brew "uv"
+brew "pipx"
 
 # TMUX
 brew "tmux"

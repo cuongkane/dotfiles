@@ -26,7 +26,7 @@ else
 fi
 
 # Reload tmux configuration if tmux is running
-if command -v tmux &> /dev/null && [ -n "$TMUX" ]; then
+if command -v tmux &> /dev/null && [ -n "${TMUX:-}" ]; then
     echo "Reloading tmux configuration..."
     tmux source-file "$HOME/.tmux.conf"
     echo "Tmux configuration reloaded!"
