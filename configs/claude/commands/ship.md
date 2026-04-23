@@ -24,16 +24,16 @@ If no, use standard commit conventions.
 
 ### 4. Craft the commit message
 
-**For PP projects**, the commit message MUST include the Jira issue ID in brackets:
+**For PP projects**, the commit message MUST include the Jira issue ID in brackets at the beginning:
 ```
-git commit -m "Your message [JIRA-123]"
+git commit -m "[JIRA-123] Your message"
 ```
 - Extract the Jira issue ID from the **current branch name** (the branch should start with or contain a Jira issue ID like `HEIMDALL-1804`, `COD-123`, etc.).
 - If the branch name does not contain a recognizable Jira issue ID, ask the user for it.
 
 **For non-PP projects**, write a concise conventional commit message summarizing the changes.
 
-If `$ARGUMENTS` is provided and looks like a commit message, use it (but still append the Jira ID for PP projects).
+If `$ARGUMENTS` is provided and looks like a commit message, use it (but still prepend the Jira ID for PP projects).
 
 ### 5. Commit
 
@@ -45,7 +45,7 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Use a HEREDOC to pass the message:
 ```bash
 git commit -m "$(cat <<'EOF'
-Your commit message [JIRA-ID]
+[JIRA-ID] Your commit message
 
 Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 EOF
@@ -78,8 +78,8 @@ When the repo name starts with `pp_`, follow these rules:
 - **Hotfix for production**: `hotfix-jira-issue-id-explanation` (e.g., `hotfix-HEIMDALL-1804-fix-null-pointer`)
 
 ### Commit message
-- MUST contain the Jira issue ID in brackets: `[HEIMDALL-1804]`
-- Format: `Description of change [JIRA-ID]`
+- MUST contain the Jira issue ID in brackets at the beginning: `[HEIMDALL-1804]`
+- Format: `[JIRA-ID] Description of change`
 
 ### Important
 - The `/ship` command does NOT create or rename branches — it only commits and pushes on the current branch.
