@@ -106,6 +106,8 @@ Scan for obvious bugs. Focus only on the diff itself without reading extra conte
 **Agent 4: Opus bug agent (parallel with agent 3)**
 Look for problems that exist in the introduced code. This could be security issues, incorrect logic, etc. Only look for issues that fall within the changed code.
 
+**Team-specific review practices:** Read `~/.claude/commands/code-review-practices.md` if it exists, and include those patterns as additional review criteria for all agents.
+
 **CRITICAL: We only want HIGH SIGNAL issues.** Flag issues where:
 - The code will fail to compile or parse (syntax errors, type errors, missing imports, unresolved references)
 - The code will definitely produce wrong results regardless of inputs (clear logic errors)
