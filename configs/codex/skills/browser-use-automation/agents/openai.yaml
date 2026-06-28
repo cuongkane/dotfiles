@@ -1,0 +1,4 @@
+interface:
+  display_name: "Browser Use Automation"
+  short_description: "Control browsers with browser-use CLI."
+  default_prompt: "Use browser-use to open this page, inspect state, interact with it, and capture screenshots."
