@@ -1,6 +1,15 @@
 source "packages/brew/install_brew.sh"
 brew bundle --file=packages/Brewfile --no-upgrade
 
+# Self-heal broken brew packages (e.g. shared library version mismatches)
+if command -v brew >/dev/null 2>&1; then
+  broken=$(brew missing 2>/dev/null || true)
+  if [ -n "$broken" ]; then
+    printf "%b\n" "${YELLOW}Repairing broken brew packages...${NC}"
+    echo "$broken" | cut -d: -f1 | xargs brew reinstall
+  fi
+fi
+
 source "packages/zsh/install_zsh.sh"
 source "packages/xcode/install_xcode.sh"
 source "packages/pyenv/install_pyenv.sh"
