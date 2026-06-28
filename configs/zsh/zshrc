@@ -115,3 +115,10 @@ fpath=(/Users/lexuancuong/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
+
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
+
+# opencode
+export PATH=/Users/lexuancuong/.opencode/bin:$PATH
