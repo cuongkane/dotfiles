@@ -18,3 +18,10 @@
     ~/.claude/commands: claude/commands
     ~/.claude/skills: claude/skills
     ~/.claude/agents: claude/agents
+    ~/.codex/config.toml: codex/config.toml
+    ~/.codex/rules/default.rules: codex/rules/default.rules
+    ~/.codex/skills/dotfiles-maintainer: codex/skills/dotfiles-maintainer
+    ~/.codex/skills/code-review-practices: codex/skills/code-review-practices
+    ~/.codex/skills/ship-changes: codex/skills/ship-changes
+    ~/.codex/skills/create-latex-slides: codex/skills/create-latex-slides
+    ~/.codex/skills/browser-ui-debugger: codex/skills/browser-ui-debugger

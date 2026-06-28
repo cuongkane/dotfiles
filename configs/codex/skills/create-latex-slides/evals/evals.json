@@ -1,0 +1,23 @@
+{
+  "skill_name": "create-latex-slides",
+  "evals": [
+    {
+      "id": 0,
+      "name": "blog-with-svgs-sdd",
+      "prompt": "Turn this blog post into a Beamer slide deck: /Users/lexuancuong/CUONG/BLOG/src/content/blog/sdd_in_ai_era.mdx. Build the PDF. Keep the SVG diagrams. Save the project at /tmp/slide-test/sdd/.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "text-only-user-story",
+      "prompt": "Create a Beamer presentation from this blog post: /Users/lexuancuong/CUONG/BLOG/src/content/blog/how_to_write_a_good_user_story.mdx. Build the PDF. Save the project at /tmp/slide-test/user-story/.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "architecture-microservices",
+      "prompt": "Make a slide deck from /Users/lexuancuong/CUONG/BLOG/src/content/blog/splitting_microservices.mdx for a 20-minute engineering talk. Build the PDF. Save the project at /tmp/slide-test/microservices/.",
+      "files": []
+    }
+  ]
+}

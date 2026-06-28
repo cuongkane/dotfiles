@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ship Changes"
+  short_description: "Commit and push changes safely."
+  default_prompt: "Commit and push the current changes."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Browser UI Debugger"
+  short_description: "Inspect web UIs with Playwright screenshots."
+  default_prompt: "Open this app in a browser, inspect the UI, and suggest layout fixes."

@@ -1,0 +1,23 @@
+personality = "pragmatic"
+approvals_reviewer = "auto_review"
+
+[projects."/Users/lexuancuong/PP/parcel-perform/pp_analytics_alert"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/CUONG/JVN/multigraph-swe-agent/sage_agent"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/PP/parcel-perform"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/PP/parcel-perform/pp_flink_sla"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/CUONG/SWC/sweatcharge_fe"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/PP/dotfiles"]
+trust_level = "trusted"
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4

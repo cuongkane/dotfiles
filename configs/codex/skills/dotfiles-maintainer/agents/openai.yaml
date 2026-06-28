@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dotfiles Maintainer"
+  short_description: "Maintain this dotfiles repo."
+  default_prompt: "Update the dotfiles setup for a tool or audit the existing links and installers."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Review Practices"
+  short_description: "Review PRs and MRs with local review rules."
+  default_prompt: "Review this PR or MR for high-signal issues."
