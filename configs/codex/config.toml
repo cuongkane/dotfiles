@@ -19,5 +19,17 @@ trust_level = "trusted"
 [projects."/Users/lexuancuong/PP/dotfiles"]
 trust_level = "trusted"
 
+[projects."/Users/lexuancuong/CUONG/SWC/new_swc_fe_codex"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/CUONG/SWC/new_swc_fe"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/CUONG/SWC"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/CUONG/NEW_SWC"]
+trust_level = "trusted"
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
