@@ -36,6 +36,9 @@ source $ZSH/oh-my-zsh.sh
 
 export LANG=en_US.UTF-8
 export EDITOR='nvim'
+# Force Claude Code's classic renderer (no alternate screen / mouse capture)
+# so tmux copy-mode scrolling (prefix + [ then arrow keys) keeps working.
+export CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1
 # For Git GCP
 export GPG_TTY=$(tty)
 
@@ -102,6 +105,11 @@ eval "$(pyenv init --path)"
 # Postgresql
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 export PATH="/opt/homebrew/opt/npm/bin:$PATH"
+# NPM package registry (Google Artifact Registry)
+export NPM_REPOSITORY_NAME=npm-package-registry-platform
+export NPM_REGISTRY_PROJECT_REGION=asia
+export NPM_REGISTRY_PROJECT=inspectorio-ant
+export NPM_REGISTRY_PROJECT_SCOPE=@saas
 
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH" # Volta is before Homebrew because node js issue
@@ -122,3 +130,9 @@ source <(ng completion script)
 
 # opencode
 export PATH=/Users/lexuancuong/.opencode/bin:$PATH
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/cuong.le/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/cuong.le/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/cuong.le/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/cuong.le/google-cloud-sdk/completion.zsh.inc'; fi
+export PATH=~/.npm-global/bin:$PATH
