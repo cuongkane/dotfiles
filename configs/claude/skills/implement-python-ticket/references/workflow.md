@@ -50,6 +50,23 @@ code) until the requirements are settled.
 
 **Goal:** an approved design and an explicit test list.
 
+### Dispatch (context isolation)
+Run this phase in a **`Plan` subagent** (read-only) so the codebase exploration does not bloat the
+main session. Pass it:
+- the **confirmed requirements / acceptance criteria** from Phase 1 (the GATE-A-approved
+  restatement), the ticket summary, and the target branch.
+
+Require the subagent to return a **compact plan** in the shape below (no raw file dumps) **plus an
+`ambiguities` list**:
+- **Approach**, **Files to change / add**, **Data / API / schema changes**, **Edge cases & error
+  handling**, **Test plan**, **Risks / out of scope** — as specified below.
+- **`ambiguities`** — anything in the code that contradicts or under-specifies the confirmed
+  requirements. The subagent records these; it does **not** ask the user.
+
+**Main-session rule after it returns:** if `ambiguities` is non-empty, **return to GATE A** and
+raise them with the user. Otherwise write the plan to the plan file and present **GATE B**. (The
+`Plan` agent is read-only, so the main session performs the plan-file write.)
+
 **Now** explore the codebase (this is the first phase that reads code): find where the change
 lives, the existing patterns/layers to follow, and anything that changes the approach. If the
 code reveals a *new* ambiguity that contradicts the confirmed requirements, surface it and
@@ -76,6 +93,18 @@ If the user requests changes, revise and re-present.
 
 ## Phase 3 — Code
 
+### Dispatch (context isolation)
+The **main session** first confirms a clean tree and **creates the branch**
+(`references/git-conventions.md`) so the subagent codes on the right branch. Then dispatch a
+**`general-purpose` subagent** on the **default filesystem** — *not* an isolated worktree, so the
+change persists on the branch the main session later pushes. Pass it:
+- the **approved plan** (from GATE B), a pointer to `references/engineering-practices.md`, and the
+  branch name.
+
+The subagent returns a **changed-files summary** (each path + one line on what changed) — **not**
+full diffs. The main session then runs `git diff --stat` / `git status` to confirm the change
+landed, rather than holding the subagent's file-read history.
+
 1. Confirm a clean working tree. If there are unrelated local changes, ask before
    proceeding.
 2. Create the branch per `references/git-conventions.md`:
@@ -93,6 +122,17 @@ If the user requests changes, revise and re-present.
 ---
 
 ## Phase 4 — Tests
+
+### Dispatch (context isolation)
+Dispatch a **separate `general-purpose` subagent** (default filesystem) for tests. Pass it:
+- the **approved test plan** and the **acceptance criteria**, and instruct it to derive the
+  changed surface from `git diff` against the merge-base of the target branch (it re-reads the
+  code from the branch, not from any main-session transcript).
+
+The subagent writes tests to `references/testing-standards.md` standards, runs the touched-area
+suite, and returns the **diff→test map** plus a **pass/fail status** — including test-runner output
+**only on failure**. The main session records the diff→test map for the MR body; on failure it
+re-dispatches the subagent with the failure detail.
 
 Follow `references/testing-standards.md`. In short:
 
@@ -164,3 +204,12 @@ Follow `references/git-conventions.md`. In short:
 - Treat silence as not-approved. Do not proceed on assumption.
 - If the user answers only part of the open questions, ask again on the rest before advancing.
 - Approval for one phase is not approval for the next.
+- **Gates run in the main session only.** A dispatched subagent never asks the user; if it hits a
+  new ambiguity it **returns it as data** (see Phase 2's `ambiguities` list) and the main session
+  raises it at the appropriate gate.
+
+## MCP / tool scope of subagents
+
+- **Phase 1 stays in the main session** because it needs your Atlassian MCP tools to fetch the
+  ticket. The delegated subagents (Phases 2–4) do **not** need Jira access — pass them the
+  ticket context you already gathered, rather than having them re-fetch it.

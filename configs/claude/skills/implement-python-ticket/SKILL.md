@@ -34,6 +34,26 @@ Phase 5  Code review  (run the available code-review skill/agent; fix findings)
 Phase 6  Draft MR  (GitLab CLI, GIT conventions, status: Draft)
 ```
 
+## Context isolation / orchestration
+
+To keep the **main session's context small**, the read/explore/execute-heavy phases run in
+**isolated subagents** that return only compact artifacts; the main session orchestrates and owns
+everything interactive.
+
+- **Main session owns:** Phase 1 (needs the user + Atlassian MCP), **GATE A**, **GATE B**, and
+  Phase 6 (final MR + report).
+- **Dispatched to subagents:** Phase 2 (a read-only `Plan` agent → returns a compact plan),
+  Phase 3 (a `general-purpose` agent → writes code, returns a changed-files summary), Phase 4 (a
+  separate `general-purpose` agent → writes/runs tests, returns a diff→test map). Phase 5 already
+  dispatches a review agent.
+- **Subagents share the working tree** (default filesystem — *not* an isolated worktree), so code
+  and tests persist on the branch the main session later pushes.
+- **Subagents never cross a gate.** They cannot ask the user; a subagent that hits a new ambiguity
+  **returns it as data** and the main session raises it. The main session rebuilds state between
+  write-phases from `git diff` / `git status`, not from the subagents' transcripts.
+
+See `references/workflow.md` for the per-phase dispatch blocks (agent type, handoff, return shape).
+
 ## When to use
 
 - User gives a Jira ticket ID or URL and asks to implement it.
@@ -57,7 +77,7 @@ If a prerequisite is missing, say so and stop — do not fabricate a ticket or a
 
 Follow `references/workflow.md` for the exact steps and commands of each phase. Summary:
 
-1. **Clarify requirements — from the ticket only.** Fetch the ticket via your Atlassian MCP
+1. **Clarify requirements — from the ticket only.** *(main session)* Fetch the ticket via your Atlassian MCP
    tools. **Do not read the code yet** — judging the ticket on its own
    surfaces vagueness the author must resolve, before code-reading tempts you to silently assume
    what it "probably means." Restate the goal, acceptance criteria, scope, and **assumptions**;
@@ -65,18 +85,19 @@ Follow `references/workflow.md` for the exact steps and commands of each phase. 
    written, or needs clarification). **GATE A:** wait for the user to confirm/answer before
    planning.
 
-2. **Implementation plan.** *Now* explore the codebase. Produce a concise plan: files to change,
+2. **Implementation plan.** *(run in a `Plan` subagent)* *Now* explore the codebase. Produce a concise plan: files to change,
    the approach, edge cases, and the **explicit list of test cases** you will write (one behavior
    each). Call out risks and anything out of scope. If the code exposes a new ambiguity, return
    to GATE A. **GATE B:** wait for explicit approval ("approved", "go") before writing any code.
 
-3. **Code.** Create the branch (`references/git-conventions.md`), then implement the smallest
+3. **Code.** *(run in a `general-purpose` subagent; main session creates the branch first)*
+   Create the branch (`references/git-conventions.md`), then implement the smallest
    change that satisfies the approved plan, to the standards in
    `references/engineering-practices.md` (layered separation, SOLID applied pragmatically, clean
    names, real error handling, security, edge cases). Match surrounding code style. No unrelated
    edits.
 
-4. **Tests.** Write tests to the standards in `references/testing-standards.md`. Aim: **a test
+4. **Tests.** *(run in a separate `general-purpose` subagent)* Write tests to the standards in `references/testing-standards.md`. Aim: **a test
    for every new/changed code path and every acceptance criterion** — cover happy path, each
    branch/error path, and the in-scope edge cases. Verify by *reasoning through the diff*
    (map each change → its test), not by running a coverage tool; running local diff-coverage is
@@ -90,7 +111,7 @@ Follow `references/workflow.md` for the exact steps and commands of each phase. 
    cases, run the review on the branch diff, and **fix Critical/Important findings before Phase 6.**
    See `references/workflow.md`.
 
-6. **Draft MR.** Commit per GIT conventions, push, and open the MR as **Draft** with the GitLab
+6. **Draft MR.** *(main session)* Commit per GIT conventions, push, and open the MR as **Draft** with the GitLab
    CLI (`references/git-conventions.md`). Link the ticket. Report the MR URL.
 
 ## Reference navigation
@@ -107,6 +128,8 @@ Follow `references/workflow.md` for the exact steps and commands of each phase. 
 ## Non-negotiables
 
 - **Never cross GATE A or GATE B without user sign-off.** When unsure whether you have it, ask.
+- **Subagents never cross a gate.** Gate sign-off happens only in the main session; a dispatched
+  subagent that hits a new ambiguity returns it as data — it must not ask the user itself.
 - **Test completeness is judged by reasoning, not a coverage tool.** Every new/changed code path
   (happy path, each branch, each error path) and every acceptance criterion must have a
   corresponding test. Confirm this by mapping the diff to tests, and say so honestly — do not
