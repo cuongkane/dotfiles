@@ -49,29 +49,25 @@ Co-authored-by: Jolie <jolie@inspectorio.com>
 - Squash commits that are too small/verbose.
 - Delete the branch once merged.
 
-## Open the MR as Draft (`glab`)
+## Open the MR as Draft
 
-Commit → push → create Draft MR:
+**Required outcome:** commit → push → open a **Draft** MR, titled `[<TICKET>] <subject>`, with a
+real description (see the template below), against the correct target branch, with the ticket
+linked. The MR must open in **Draft** status — never mark it ready automatically. After creation,
+report the MR URL to the user.
+
+Use the GitLab CLI to open it. Illustrative example (adapt flags to your CLI version — the
+outcome above is the contract, not these exact flags):
 ```
 git add -A
-git commit -m "[<TICKET>] <Imperative subject ≤50 chars>"   # add -m body / trailers as needed
+git commit -m "[<TICKET>] <Imperative subject ≤50 chars>"   # add body / trailers as needed
 git push -u origin HEAD
 
 glab mr create --draft \
   --title "[<TICKET>] <subject>" \
-  --description "$(cat <<'EOF'
-<MR description — see template below>
-EOF
-)" \
+  --description "<MR description — see template below>" \
   --target-branch <target>
 ```
-
-Notes:
-- `--draft` is required — the MR must open in **Draft** status. Never mark it ready automatically.
-- `--fill` can seed title/body from the branch/commits; still pass an explicit `--title` in the
-  `[<TICKET>] subject` format and a real description.
-- Add `-R <group>/<repo>` only if the remote isn't inferred from the checkout.
-- After creation, report the MR URL to the user.
 
 ## MR description template
 

@@ -31,7 +31,7 @@ Phase 4  Tests   (a test for every changed path + acceptance criterion)
              ▼
 Phase 5  Code review  (run the available code-review skill/agent; fix findings)
              ▼
-Phase 6  Draft MR  (glab, GIT conventions, status: Draft)
+Phase 6  Draft MR  (GitLab CLI, GIT conventions, status: Draft)
 ```
 
 ## When to use
@@ -45,10 +45,11 @@ Not for: pure code review (use `/code-review`), resolving existing MR comments
 
 ## Prerequisites (check once, early)
 
-- `mcp__atlassian__*` reachable — used to read the ticket (per your global CLAUDE.md routing).
-- `glab` authenticated — `glab auth status`. Used to open the MR.
+- Jira reachable via your Atlassian MCP tools (per your global CLAUDE.md routing) — used to read
+  the ticket.
+- The GitLab CLI is authenticated — used to open the MR.
 - Inside a git repo with a GitLab `origin`. Default target branch is usually `master`/`main` —
-  confirm with `git remote show origin`.
+  confirm which one this repo uses.
 
 If a prerequisite is missing, say so and stop — do not fabricate a ticket or a fake MR.
 
@@ -56,8 +57,8 @@ If a prerequisite is missing, say so and stop — do not fabricate a ticket or a
 
 Follow `references/workflow.md` for the exact steps and commands of each phase. Summary:
 
-1. **Clarify requirements — from the ticket only.** Fetch the ticket
-   (`mcp__atlassian__getJiraIssue`). **Do not read the code yet** — judging the ticket on its own
+1. **Clarify requirements — from the ticket only.** Fetch the ticket via your Atlassian MCP
+   tools. **Do not read the code yet** — judging the ticket on its own
    surfaces vagueness the author must resolve, before code-reading tempts you to silently assume
    what it "probably means." Restate the goal, acceptance criteria, scope, and **assumptions**;
    list every ambiguity/gap as a numbered open question; and give a **readiness call** (ready as
@@ -89,8 +90,8 @@ Follow `references/workflow.md` for the exact steps and commands of each phase. 
    cases, run the review on the branch diff, and **fix Critical/Important findings before Phase 6.**
    See `references/workflow.md`.
 
-6. **Draft MR.** Commit per GIT conventions, push, and open the MR as **Draft** with `glab`
-   (`references/git-conventions.md`). Link the ticket. Report the MR URL.
+6. **Draft MR.** Commit per GIT conventions, push, and open the MR as **Draft** with the GitLab
+   CLI (`references/git-conventions.md`). Link the ticket. Report the MR URL.
 
 ## Reference navigation
 
@@ -100,8 +101,8 @@ Follow `references/workflow.md` for the exact steps and commands of each phase. 
   SOLID applied pragmatically, clean code, error handling, security, edge cases, diff hygiene.
 - `references/testing-standards.md` — Inspectorio Unit Testing Best Practices (the 8
   guidelines, AAA, what-not-to-test, sight-be conventions) + the coverage-by-reasoning procedure.
-- `references/git-conventions.md` — branch naming, commit format, and the `glab` draft-MR
-  commands + MR description template.
+- `references/git-conventions.md` — branch naming, commit format, and the GitLab CLI draft-MR
+  steps + MR description template.
 
 ## Non-negotiables
 

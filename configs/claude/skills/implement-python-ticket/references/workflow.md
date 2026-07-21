@@ -13,10 +13,7 @@ exploration. This is deliberate: reading the code first makes you infer what the
 ticket on its own terms first.
 
 1. Resolve the ticket ID from the user's input (accept `ABC-123` or a full Jira URL).
-2. Fetch it:
-   ```
-   mcp__atlassian__getJiraIssue  (cloudId: inspectorio.atlassian.net, issueIdOrKey: <TICKET>)
-   ```
+2. Fetch the ticket using your Atlassian MCP tools (Jira routing per your global CLAUDE.md).
    Read the description, acceptance criteria, comments, linked issues, and attachments. If the
    fetch fails, stop and tell the user — do not proceed from a guessed ticket.
 3. **Do not open the codebase in this phase.** No file search, no grep, no repo reading. Work
@@ -79,7 +76,7 @@ If the user requests changes, revise and re-present.
 
 ## Phase 3 — Code
 
-1. Confirm a clean working tree (`git status`). If there are unrelated local changes, ask before
+1. Confirm a clean working tree. If there are unrelated local changes, ask before
    proceeding.
 2. Create the branch per `references/git-conventions.md`:
    `feature|fix|chore/<ticket-id>/<subject>`.
@@ -102,7 +99,7 @@ Follow `references/testing-standards.md`. In short:
 1. Write a test per case from the approved test plan — one behavior each, AAA layout,
    self-sufficient, deterministic. Mock external/out-of-process dependencies; never hit a real
    DB or network in a unit test.
-2. Run the suite for the touched area and make it green (`pytest <path/to/tests>`).
+2. Run the test suite for the touched area and make it green.
 3. **Confirm completeness by reasoning through the diff, not by running a coverage tool.** Local
    diff-coverage tooling is impractical here, so instead walk the change and check that:
    - every new/changed **code path** has a test — happy path, each `if`/`else` branch, each
@@ -132,12 +129,9 @@ Follow `references/testing-standards.md`. In short:
    and say that no dedicated reviewer was found.
 2. **Scout edge cases first** (empty/nil/boundary inputs, failure of a mocked dependency,
    concurrency, backward-compat) and confirm the test plan covers them — add tests if not.
-3. **Run the review on the branch diff:**
-   ```
-   BASE_SHA=$(git merge-base origin/<target> HEAD)
-   HEAD_SHA=$(git rev-parse HEAD)
-   ```
-   Give the reviewer: what changed, the plan, `BASE_SHA`, `HEAD_SHA`, and the ticket context.
+3. **Run the review on the branch diff:** give the reviewer what changed, the plan, the ticket
+   context, and the diff — the branch's changes relative to the merge-base of the target branch
+   through `HEAD`.
 4. **Act on findings:** fix **Critical** and **Important** before Phase 6. For anything you
    consciously skip, verify the claim technically and state why (no performative agreement).
 5. Re-run the tests after fixes (green), and re-check the diff → test map still holds — any code
@@ -153,15 +147,10 @@ Follow `references/git-conventions.md`. In short:
 
 1. Stage and commit with a conventional subject: `[<TICKET>] <Imperative subject ≤50 chars>`,
    body explaining what & why. Add `Co-authored-by:` trailers if pairing.
-2. Push the branch: `git push -u origin HEAD`.
-3. Open the MR as **Draft**:
-   ```
-   glab mr create --draft --fill \
-     --title "[<TICKET>] <subject>" \
-     --description "<from the MR template>" \
-     --target-branch <target>
-   ```
-   (Use `--source-branch`/`-R` if not inferred from the current checkout.)
+2. Push the branch.
+3. Open the MR as **Draft** with the GitLab CLI, following `references/git-conventions.md` for
+   the title/description format and target branch. The MR **must** open in Draft status — never
+   mark it ready automatically.
 4. Ensure the ticket is linked in title/description. Optionally transition the Jira ticket or add
    a comment with the MR link **only if the user asks** — do not change ticket state silently.
 5. Report the **MR URL** and a short summary of what was implemented and tested, including the
