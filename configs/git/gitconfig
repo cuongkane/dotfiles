@@ -1,8 +1,8 @@
 [pull]
 	ff = only
 [user]
-	name = lexuancuong
-	email = cuongle.software@gmail.com
+	name = Cuong (Kane) Le
+	email = cuong.le@inspectorio.com
 	signingkey = 5008D0EFA326B408
 [core]
 	autocrlf = false
@@ -16,3 +16,7 @@
 	showSignature = true
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+# Repos under ~/KANE/ (e.g. dotfiles) use the personal identity; everything else
+# keeps the company identity above. Placed last so it overrides the default.
+[includeIf "gitdir:~/KANE/"]
+	path = ~/KANE/dotfiles/configs/git/gitconfig-personal

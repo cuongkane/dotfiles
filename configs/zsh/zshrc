@@ -101,6 +101,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="/opt/homebrew/opt/icu4c/bin:$PATH"
 
 # Homebrew
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 eval "$(pyenv init --path)"
 # Postgresql
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
@@ -118,6 +119,32 @@ eval "$(zoxide init zsh)"
 # =============================================================================
 #                                   Functions
 # =============================================================================
+
+# Prefer a project's local virtualenv for Python tools, including commands run
+# by Git hooks that inherit PATH. Walk upwards so this also works in subfolders.
+autoload -Uz add-zsh-hook
+typeset -g PROJECT_VENV_BIN=''
+
+function sync_project_venv_path() {
+    if [[ -n "$PROJECT_VENV_BIN" ]]; then
+        path=("${(@)path:#$PROJECT_VENV_BIN}")
+        PROJECT_VENV_BIN=''
+    fi
+
+    local project_dir="$PWD"
+    while [[ "$project_dir" != "/" ]]; do
+        if [[ -d "$project_dir/.venv/bin" ]]; then
+            PROJECT_VENV_BIN="$project_dir/.venv/bin"
+            path=("$PROJECT_VENV_BIN" $path)
+            return
+        fi
+        project_dir="${project_dir:h}"
+    done
+}
+
+add-zsh-hook chpwd sync_project_venv_path
+sync_project_venv_path
+
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/lexuancuong/.docker/completions $fpath)
 autoload -Uz compinit
@@ -138,7 +165,12 @@ if [ -f '/Users/cuong.le/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/
 export PATH=~/.npm-global/bin:$PATH
 
 # GeoDjango native libraries
-export DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib:$DYLD_FALLBACK_LIBRARY_PATH
-export GDAL_LIBRARY_PATH=/opt/homebrew/lib/libgdal.dylib
-export GEOS_LIBRARY_PATH=/opt/homebrew/lib/libgeos_c.dylib
+export DYLD_LIBRARY_PATH="/opt/homebrew/lib${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
+export DYLD_FALLBACK_LIBRARY_PATH="/opt/homebrew/lib${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
+export GDAL_LIBRARY_PATH="/opt/homebrew/lib/libgdal.dylib"
+export GEOS_LIBRARY_PATH="/opt/homebrew/lib/libgeos_c.dylib"
+# Apple strips DYLD_* when /bin/bash starts. Git's mypy hook uses `bash -c`,
+# so have non-interactive Bash restore the native-library environment.
+export BASH_ENV="$HOME/KANE/dotfiles/configs/zsh/bash_env"
+
 export PATH="/usr/local/opt/libpq/bin:$PATH"

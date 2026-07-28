@@ -1,0 +1,5 @@
+# Personal identity — applied only to repos under ~/KANE/ (see includeIf in gitconfig).
+# Everything else defaults to the company identity in gitconfig.
+[user]
+	name = lexuancuong
+	email = cuongle.software@gmail.com

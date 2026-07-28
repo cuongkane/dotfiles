@@ -34,6 +34,26 @@ Phase 5  Code review  (run the available code-review skill/agent; fix findings)
 Phase 6  Draft MR  (GitLab CLI, GIT conventions, status: Draft)
 ```
 
+## Working rules
+
+These sharpen how the phases below are executed:
+
+- **Goal-driven execution (applies across all phases).** Treat the ticket's acceptance
+  criteria as the success definition, and loop until every one is verified — don't stop
+  at "steps done." In Phase 4 this means the diff→test map must show each criterion
+  covered; in Phase 5, fix findings until the review is clean, not just run once.
+
+- **Surface conflicts, don't average them.** If two patterns in the codebase contradict
+  (e.g. two ways to structure a service call), pick one — prefer the more recent or the
+  better-tested — state why in the plan, and flag the other for the reviewer. Never blend
+  two conflicting patterns into a hybrid. This is a plan-time (Phase 2) call; if it can't
+  be resolved from the code, raise it at GATE A/B as data.
+
+- **Tests verify intent, not just behavior.** Each test must encode *why* the behavior
+  matters (the acceptance criterion it protects), not merely *what* the code does now. A
+  test that can't fail when the business rule changes is worthless — assert on the fields
+  that carry the rule (reinforces testing-standards guideline #7 on over-specification).
+
 ## Context isolation / orchestration
 
 To keep the **main session's context small**, the read/explore/execute-heavy phases run in
