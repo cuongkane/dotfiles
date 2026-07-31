@@ -62,7 +62,8 @@ everything interactive.
 
 - **Main session owns:** Phase 1 (needs the user + Atlassian MCP), **GATE A**, **GATE B**, and
   Phase 6 (final MR + report).
-- **Dispatched to subagents:** Phase 2 (a read-only `Plan` agent → returns a compact plan),
+- **Dispatched to subagents:** Phase 2 (a read-only `Plan` agent, dispatched with
+  `model: "sonnet"` → returns a compact plan),
   Phase 3 (a `general-purpose` agent → writes code, returns a changed-files summary), Phase 4 (a
   separate `general-purpose` agent → writes/runs tests, returns a diff→test map). Phase 5 already
   dispatches a review agent.
@@ -105,7 +106,7 @@ Follow `references/workflow.md` for the exact steps and commands of each phase. 
    written, or needs clarification). **GATE A:** wait for the user to confirm/answer before
    planning.
 
-2. **Implementation plan.** *(run in a `Plan` subagent)* *Now* explore the codebase. Produce a concise plan: files to change,
+2. **Implementation plan.** *(run in a `Plan` subagent with `model: "sonnet"`)* *Now* explore the codebase. Produce a concise plan: files to change,
    the approach, edge cases, and the **explicit list of test cases** you will write (one behavior
    each). Call out risks and anything out of scope. If the code exposes a new ambiguity, return
    to GATE A. **GATE B:** wait for explicit approval ("approved", "go") before writing any code.
@@ -122,7 +123,8 @@ Follow `references/workflow.md` for the exact steps and commands of each phase. 
    branch/error path, and the in-scope edge cases. Verify by *reasoning through the diff*
    (map each change → its test), not by running a coverage tool; running local diff-coverage is
    impractical here. Tests must run green and be clear (one behavior per test, AAA,
-   self-sufficient, deterministic).
+   self-sufficient, deterministic). AAA is layout, not labels — never emit `# Arrange` /
+   `# Act` / `# Assert` (or Given/When/Then) comments.
 
 5. **Code review.** Before the MR goes up, review the new code with the **available code-review
    skill/agent** — discover it in this order and use the first that exists:

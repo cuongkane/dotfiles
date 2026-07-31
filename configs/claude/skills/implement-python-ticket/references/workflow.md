@@ -52,7 +52,8 @@ code) until the requirements are settled.
 
 ### Dispatch (context isolation)
 Run this phase in a **`Plan` subagent** (read-only) so the codebase exploration does not bloat the
-main session. Pass it:
+main session. Dispatch it with **`model: "sonnet"` explicitly** — code reading is high-volume and
+low-judgement, so it does not need the session's default (larger) model. Pass it:
 - the **confirmed requirements / acceptance criteria** from Phase 1 (the GATE-A-approved
   restatement), the ticket summary, and the target branch.
 
@@ -77,6 +78,10 @@ no filler):
 
 - **Approach** — one sentence, then the sequence of changes.
 - **Files to change / add** — path per bullet, with what changes in each.
+- **Placement, with precedent** — for each *new* file, give its full path and name the existing
+  sibling it sits next to (`saas_clients/labtest_agent_hub_client.py`, next to
+  `hermes_client.py`). If no sibling exists, say so explicitly — that's a claim the user can
+  correct at GATE B, and it's far cheaper to correct there than in review.
 - **Data / API / schema changes** — migrations, contracts, backward-compat notes.
 - **Edge cases & error handling** — what happens on bad input, empty, failure of a dependency.
 - **Test plan** — the explicit list of test cases you will write, **one behavior per case**,
@@ -138,9 +143,15 @@ Follow `references/testing-standards.md`. In short:
 
 1. Write a test per case from the approved test plan — one behavior each, AAA layout,
    self-sufficient, deterministic. Mock external/out-of-process dependencies; never hit a real
-   DB or network in a unit test.
+   DB or network in a unit test. AAA is expressed through layout only — **no `# Arrange` /
+   `# Act` / `# Assert` (or Given/When/Then) label comments.**
 2. Run the test suite for the touched area and make it green.
-3. **Confirm completeness by reasoning through the diff, not by running a coverage tool.** Local
+3. **Verify the no-label rule mechanically** before returning — a prose rule alone has proven
+   insufficient. On the test files you touched, run:
+   `grep -rn '# *\(Arrange\|Act\|Assert\|Given\|When\|Then\)' <test paths>`
+   Any hit must be removed (or rewritten into a comment that explains something non-obvious).
+   Report the check as run in the return payload.
+4. **Confirm completeness by reasoning through the diff, not by running a coverage tool.** Local
    diff-coverage tooling is impractical here, so instead walk the change and check that:
    - every new/changed **code path** has a test — happy path, each `if`/`else` branch, each
      `except`/error path, each early return;
@@ -148,9 +159,9 @@ Follow `references/testing-standards.md`. In short:
    - the in-scope **edge cases** identified in Phases 1–3 each have a test.
    Present this as a short **diff → test map** (each changed function/branch → the test(s) that
    cover it) so a reviewer can see nothing was missed.
-4. If a path is deliberately left untested (e.g. trivial passthrough, or something in the
+5. If a path is deliberately left untested (e.g. trivial passthrough, or something in the
    "what not to unit test" list), name it and justify it — don't leave it silently uncovered.
-5. Be honest about method: state that completeness was verified by reasoning over the diff, not
+6. Be honest about method: state that completeness was verified by reasoning over the diff, not
    measured by a tool. Never report a coverage percentage you did not actually measure.
 
 ---

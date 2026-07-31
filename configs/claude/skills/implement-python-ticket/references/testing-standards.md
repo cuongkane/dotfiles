@@ -78,6 +78,13 @@ Structure every test as **Arrange → Act → Assert** (a.k.a. **Given / When / 
 **Exactly one AAA cycle per test.** Do not stack multiple Act/Assert blocks in one function to
 avoid re-doing Arrange — split into separate tests instead.
 
+**AAA is a structure, not a set of comments.** Never write `# Arrange` / `# Act` / `# Assert`
+(or `# Given` / `# When` / `# Then`) labels — they restate what the code already shows and add
+noise to every test. Express the phases with layout instead: setup lines, then the call, then
+the assertions, separated by a blank line where it helps. Only write a comment when it explains
+something non-obvious (*why* a fixture looks that way, a subtle boundary value) — never to label
+a phase.
+
 ## sight-be conventions (Sight – Web – Backend)
 
 The team's stated anti-patterns to avoid: tests hitting real DB/network, tests that are really
@@ -92,23 +99,18 @@ class AggregateItemsTest(unittest.TestCase):
         ...
 
     def test_should_return_items_when_single_item_given(self):
-        # Arrange
         item_data = [PurchaseOrderItemData(items=items, assortments=assortments, solid=solid)]
         item_dict = PurchaseOrderItemVersion2DictFactory(item_id="item_001", ...)
-        # ...set up mocked dependencies and fake data...
 
-        # Act
         actual = PurchaseOrderItemVersion2Service.aggregate_items(item_data)
 
-        # Assert
         self.assertIn("items", actual)
 
     def test_should_drop_assortments_when_items_conflict(self):
-        # Arrange
         item_data = [PurchaseOrderItemData(), PurchaseOrderItemData()]
-        # Act
+
         actual = PurchaseOrderItemVersion2Service.aggregate_items(item_data)
-        # Assert
+
         self.assertEqual([], actual["assortments"])
 
     def tearDown(self):
@@ -126,6 +128,15 @@ or real `self.client.post(...)` API calls inside a unit test.
   deterministic in *datatype* (see guideline #3).
 - **Mocking:** `from unittest.mock import patch`. Patch where the name is *looked up*, not where
   it's defined. Assert on inputs, not just call counts (guideline #7).
+- **Shared class-level fixtures leak through shallow copies.** When a base `setUp`
+  "owns" a mutable fixture by shallow-copying it (`self.payload = dict(cls.payload)`),
+  nested dicts/lists are still shared with the class attribute. A helper that mutates a
+  nested entry in place (e.g. `self.payload['roles'][org_id] = [...]`) then leaks into
+  every later test. Copy the nested structure too
+  (`self.payload['roles'] = dict(self.payload['roles'])`). And when you touch shared
+  fixture state, run the **whole file**, not just your new test — leakage can make an
+  unrelated *negative* test ("should be denied") pass for the wrong reason, which is
+  invisible when the new test is run alone.
 
 ## Coverage by reasoning — procedure
 
@@ -164,6 +175,7 @@ full coverage of new/changed code by reasoning over the diff and mapping each ch
 
 - [ ] One behavior per test; no `if` in tests.
 - [ ] AAA, exactly one cycle each; clear `test_should[nt]_<expected_behavior>_when_<scenario>` names.
+- [ ] No `# Arrange` / `# Act` / `# Assert` (or Given/When/Then) label comments — structure only.
 - [ ] No real DB/network/env dependency; deterministic; order-independent.
 - [ ] Tests results/behavior, not internals; no over-strict mocks.
 - [ ] Every new/changed path + acceptance criterion + in-scope edge case has a test.

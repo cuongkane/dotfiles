@@ -50,6 +50,12 @@ YAGNI/KISS win ties: the smallest clear solution beats a pattern-heavy one.
 ## Clean code
 
 - **Names say intent.** `calculate_area_in_meters(width_in, height_in)` over `d(a, b)`.
+  **Spell out domain and service names in full**, using the wording the ticket and the team
+  use — `AgentHubClient`, not `AgentClient`, when the service is "Agent Hub". A shortened name
+  collides with the generic term it truncates, and the ambiguity spreads into class names,
+  settings keys, env vars and log lines, making the rename expensive later. When the full name
+  has a genuinely narrower sub-part (the *agent* hosted *by* the hub), keep both names distinct
+  rather than reusing one for both.
 - **Small functions**, ideally < ~20 lines, one level of abstraction each. Extract helpers.
 - **No magic numbers/strings** — name them as constants (`MINIMUM_AGE = 18`).
   Put a named constant in the **most specific module that owns it** — if only one
@@ -82,8 +88,28 @@ YAGNI/KISS win ties: the smallest clear solution beats a pattern-heavy one.
   one caller's need (it changes behavior for every other caller); adapt at your
   call site instead (e.g. guard `None` before calling, rather than broadening the
   util's `except`).
-- **Comments explain *why*, not *what*.** The code already says what.
+- **Comments explain *why*, not *what*.** The code already says what. This cuts both ways:
+  - **Owed a comment:** any value a reader cannot derive from the line itself — a protocol
+    header, a magic timeout, a cache directive, a deliberate deviation from a convention. State
+    the consequence of removing it ("without this, nginx buffers the stream and delivers it all
+    at once"), not the mechanism.
+  - **Not owed one:** a comment whose claim the reader can't act on, or that narrates the call
+    below it. If you can't finish the sentence "this matters because…", delete it.
 - **Readable > clever.**
+
+## Find where this kind of thing already lives
+
+Before creating a new module, locate the existing instances of the *same kind of thing* and put
+yours beside them. Outbound service clients, serializers, Celery tasks, permissions and factories
+usually already have one canonical home; a new app-local `services/` package that duplicates that
+home is a review comment waiting to happen.
+
+- Search by kind, not by feature: `find . -name '*_client.py'`, `ls */tasks.py`,
+  `find . -type d -name serializers`. One sibling is a precedent; three is a convention.
+- Put it there **even when yours differs technically.** If your module can't reuse the shared
+  plumbing (a shared session helper with a hardcoded timeout, say), the location convention still
+  applies — document the deviation in a docstring rather than relocating the file.
+- Deviate only with a stated reason, and expect to defend it in review.
 
 ## Python idioms
 
@@ -167,3 +193,8 @@ Each edge case you decide is in-scope becomes a named test in Phase 4.
   ticket instead of expanding this diff.
 - No dead code, debug prints, commented-out blocks, or unrelated formatting churn.
 - Match the surrounding module's style, imports, and idioms.
+- **When two forms are both defensible, count before choosing.** For repo-wide stylistic choices
+  — f-string vs lazy `%s` logging, `Optional[X]` vs `X | None`, quote style, import grouping —
+  grep both forms across the repo and follow the majority, even if you'd argue for the other on
+  general principle. "Best practice" loses to "what this codebase does"; a lone divergence reads
+  as carelessness to a reviewer.
