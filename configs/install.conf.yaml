@@ -28,5 +28,5 @@
     ~/.codex/skills/create-latex-slides: codex/skills/create-latex-slides
     ~/.codex/skills/browser-ui-debugger: codex/skills/browser-ui-debugger
     ~/.codex/skills/browser-use-automation: codex/skills/browser-use-automation
-    ~/.codex/skills/implement-feature: codex/skills/implement-feature
+    ~/.codex/skills/implement-sweatcharge-feature: codex/skills/implement-sweatcharge-feature
     ~/.config/opencode/commands: opencode/commands

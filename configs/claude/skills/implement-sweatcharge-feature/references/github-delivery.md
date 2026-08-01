@@ -13,7 +13,7 @@
 Follow repository commit conventions discovered from recent history. Prefer a small number of
 coherent commits. Do not rewrite unrelated history.
 
-Invoking `implement-feature` explicitly authorizes publishing the committed feature code and
+Invoking `implement-sweatcharge-feature` explicitly authorizes publishing the committed feature code and
 specifications to the SweatCharge GitHub repository as part of delivery. Before pushing, inspect
 `git remote get-url origin` and verify it is the SSH or HTTPS form of
 `github.com:cuongkane/sweatcharge.git`. If it matches, push without requesting another

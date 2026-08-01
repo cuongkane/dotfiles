@@ -1,9 +1,10 @@
 ---
-name: implement-feature
+name: implement-sweatcharge-feature
 description: Implement a vague feature request end-to-end in the SweatCharge workspace at /Users/lexuancuong/CUONG/SWC, across its Python/Django backend and Angular/TypeScript frontend as needed. Use when the user asks to implement, build, add, or change product behavior without a fully specified ticket. Creates an isolated git worktree first, then autonomously runs OpenSpec explore, propose, apply, testing, review, spec sync, archive, and opens a draft GitHub pull request. Stops only for material ambiguity.
+version: 1.0.0
 ---
 
-# Implement Feature
+# Implement SweatCharge Feature
 
 Turn a rough feature request into a reviewed draft GitHub pull request for SweatCharge.
 
@@ -38,6 +39,11 @@ Follow [references/workflow.md](references/workflow.md) phase by phase:
 7. Sync delta specs using `openspec-sync-specs`.
 8. Archive the completed change using `openspec archive`.
 9. Commit, push, and open a draft GitHub pull request.
+
+The OpenSpec skills live in the target repository at `.claude/skills/<name>/SKILL.md` and are
+invoked with the Skill tool by bare name (`openspec-explore`, `openspec-propose`,
+`openspec-apply-change`, `openspec-sync-specs`). Read the SKILL.md from the worktree when the
+invocation is unavailable in the current session and follow its steps directly.
 
 Read these references when entering the corresponding phases:
 
