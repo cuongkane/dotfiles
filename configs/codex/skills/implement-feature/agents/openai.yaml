@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implement Feature"
+  short_description: "Deliver vague features through OpenSpec"
+  default_prompt: "Use $implement-feature to implement this feature end-to-end: <describe the feature>."

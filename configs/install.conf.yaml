@@ -19,6 +19,7 @@
     ~/.claude/skills: claude/skills
     ~/.claude/agents: claude/agents
     ~/.codex/config.toml: codex/config.toml
+    ~/.codex/hooks.json: codex/hooks.json
     ~/.codex/rules/default.rules: codex/rules/default.rules
     ~/.codex/prompts/ship.md: codex/prompts/ship.md
     ~/.codex/skills/dotfiles-maintainer: codex/skills/dotfiles-maintainer
@@ -27,4 +28,5 @@
     ~/.codex/skills/create-latex-slides: codex/skills/create-latex-slides
     ~/.codex/skills/browser-ui-debugger: codex/skills/browser-ui-debugger
     ~/.codex/skills/browser-use-automation: codex/skills/browser-use-automation
+    ~/.codex/skills/implement-feature: codex/skills/implement-feature
     ~/.config/opencode/commands: opencode/commands

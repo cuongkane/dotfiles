@@ -1,5 +1,11 @@
 personality = "pragmatic"
 approvals_reviewer = "auto_review"
+notify = [
+    "/Users/lexuancuong/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient",
+    "turn-ended",
+]
+model = "gpt-5.6-sol"
+model_reasoning_effort = "low"
 
 [projects."/Users/lexuancuong/PP/parcel-perform/pp_analytics_alert"]
 trust_level = "trusted"
@@ -28,8 +34,139 @@ trust_level = "trusted"
 [projects."/Users/lexuancuong/CUONG/SWC"]
 trust_level = "trusted"
 
-[projects."/Users/lexuancuong/CUONG/NEW_SWC"]
+[projects."/Users/lexuancuong/Documents/Codex/2026-07-25/chrome-plugin-chrome-openai-bundled-file"]
 trust_level = "trusted"
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
+"gpt-5.6-sol" = 4
+
+[hooks.state]
+
+[hooks.state."academic-research-skills@academic-research-skills:hooks/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:0f1b53067103c5b4bd1dac1c951d9148f14b164b4240aa3c9d21171caed2ca01"
+
+[hooks.state."/Users/lexuancuong/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:dbfdde9088490838163fc41380562debe8f7dbcb206106437962ede1424bb0a3"
+
+[hooks.state."academic-research-skills@academic-research-skills:hooks/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:ec70cf5a9224931739c39e8ee3146d7905e7b6b39d38c7660320462ac7acef6b"
+
+[marketplaces.openai-bundled]
+last_updated = "2026-07-25T09:32:07Z"
+source_type = "local"
+source = "/Users/lexuancuong/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.pp-claude-code-plugins]
+last_updated = "2026-07-25T04:11:38Z"
+source_type = "local"
+source = "/Users/lexuancuong/PP/parcel-perform/claude-code-boilerplate"
+
+[marketplaces.academic-research-skills]
+last_updated = "2026-07-31T14:50:54Z"
+last_revision = "2cf3a51e159458b7a8c8784bb874248e79601f7b"
+source_type = "git"
+source = "https://github.com/Imbad0202/academic-research-skills.git"
+
+[marketplaces.claude-plugins-official]
+last_updated = "2026-07-31T14:51:04Z"
+last_revision = "28f95cb71b5382974561e51d593a852766a9d4b9"
+source_type = "git"
+source = "https://github.com/anthropics/claude-plugins-official.git"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-07-29T01:22:56Z"
+source_type = "local"
+source = "/Users/lexuancuong/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."standard@pp-claude-code-plugins"]
+enabled = true
+
+[plugins."pyright-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."skill-creator@claude-plugins-official"]
+enabled = true
+
+[plugins."slack@claude-plugins-official"]
+enabled = true
+
+[plugins."typescript-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."frontend-design@claude-plugins-official"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[features]
+js_repl = false
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/lexuancuong/.codex"
+CODEX_HOME = "/Users/lexuancuong/.codex"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f,e13fd947e846d3d306e9249dd3c73d14931b6494803dbafb16cef85e6add9506"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.721.41059"
+SKY_CUA_SERVICE_PATH = "/Users/lexuancuong/.codex/computer-use/Codex Computer Use.app"
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false
+
+[mcp_servers.grafana]
+url = "https://mcp.parcelperform.dev/grafana/"
+
+[shell_environment_policy.set]
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f,e13fd947e846d3d306e9249dd3c73d14931b6494803dbafb16cef85e6add9506"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/lexuancuong/.codex"
+
+[desktop]
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = true
+keepRemoteControlAwakeWhilePluggedIn = true
+followUpQueueMode = "queue"
