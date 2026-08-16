@@ -20,6 +20,7 @@
     ~/.claude/agents: claude/agents
     ~/.codex/config.toml: codex/config.toml
     ~/.codex/hooks.json: codex/hooks.json
+    ~/.codex/RTK.md: claude/home/RTK.md
     ~/.codex/rules/default.rules: codex/rules/default.rules
     ~/.codex/prompts/ship.md: codex/prompts/ship.md
     ~/.codex/skills/dotfiles-maintainer: codex/skills/dotfiles-maintainer
@@ -29,4 +30,5 @@
     ~/.codex/skills/browser-ui-debugger: codex/skills/browser-ui-debugger
     ~/.codex/skills/browser-use-automation: codex/skills/browser-use-automation
     ~/.codex/skills/implement-sweatcharge-feature: codex/skills/implement-sweatcharge-feature
+    ~/.codex/skills/clarify-sweatcharge-issue: codex/skills/clarify-sweatcharge-issue
     ~/.config/opencode/commands: opencode/commands

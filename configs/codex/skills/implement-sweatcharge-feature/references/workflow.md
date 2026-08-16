@@ -21,13 +21,16 @@ Before inspecting feature code or invoking OpenSpec:
      "<base-ref>"
    ```
 
+Create the worktree with this explicit command rather than the harness worktree tool, so the path
+and branch stay predictable and the phases below can address them directly.
+
 The source checkout may be dirty. Never copy, stash, reset, clean, or otherwise alter its changes.
 Verify the new worktree starts clean. From this point forward, operate only inside the worktree.
 
 ## 2. Explore
 
 1. Read root instructions and the instructions for each potentially affected component.
-2. Invoke the worktree's `.codex/skills/openspec-explore` skill.
+2. Invoke the worktree's `openspec-explore` skill (`.codex/skills/openspec-explore`).
 3. Inspect existing OpenSpec changes and main specs, affected code, tests, Feature RFCs, and git
    history.
 4. Turn the rough request into:
@@ -44,8 +47,9 @@ clear enough.
 
 ## 3. Propose
 
-Invoke `.codex/skills/openspec-propose` with the explored brief and derived change name. Follow the
-CLI-reported artifact graph and paths rather than assuming locations.
+Invoke `openspec-propose` (`.codex/skills/openspec-propose`) with the explored brief and
+derived change name. Follow the CLI-reported artifact graph and paths rather than assuming
+locations.
 
 Ensure proposal, design, delta specs, and tasks:
 
@@ -61,7 +65,8 @@ No approval gate is required unless a material ambiguity remains.
 ## 4. Apply
 
 Read [engineering-practices.md](engineering-practices.md) and
-[testing-standards.md](testing-standards.md), then invoke `.codex/skills/openspec-apply-change`.
+[testing-standards.md](testing-standards.md), then invoke `openspec-apply-change`
+(`.codex/skills/openspec-apply-change`).
 
 For each task:
 
@@ -96,7 +101,8 @@ separate unrelated environmental failures from code failures.
 
 ## 6. Review
 
-Review the complete diff from the base branch using the available code-review skill. Check:
+Review the complete diff from the base branch using the available code-review skill or the
+`/code-review` command, run from inside the worktree. Check:
 
 - correctness against OpenSpec scenarios;
 - regressions, edge cases, auth, tenancy, money, migrations, and compatibility;
@@ -110,8 +116,8 @@ fix. A build result from an earlier source state does not satisfy verification.
 
 ## 7. Sync specifications
 
-Invoke `.codex/skills/openspec-sync-specs` with the explicit change name. Confirm the merge is
-idempotent and preserves unrelated requirements.
+Invoke `openspec-sync-specs` (`.codex/skills/openspec-sync-specs`) with the explicit
+change name. Confirm the merge is idempotent and preserves unrelated requirements.
 
 Also update any affected frontend Feature RFC required by `sweatcharge_fe/AGENTS.md` and its
 current spec guide. Re-run strict OpenSpec validation before archiving.
@@ -128,6 +134,9 @@ After implementation, tests, review, Feature RFC updates, and spec sync are comp
    ```bash
    openspec archive "<change>" --yes
    ```
+
+Use the CLI directly here. The repository's `openspec-archive-change` skill prompts the user to
+pick a change and to confirm warnings, which conflicts with this skill's autonomous contract.
 
 Do not use `--skip-specs` or `--no-validate`. The prior sync makes the archive's spec update
 idempotent and gives the CLI a final consistency check.
@@ -148,9 +157,12 @@ the last successful build.
 ## 9. Deliver
 
 Read [github-delivery.md](github-delivery.md). Inspect the final status and diff, commit coherent
-changes, push the feature branch, and open a draft GitHub pull request.
+changes, push the feature branch, and open a GitHub pull request ready for review.
 
 The request to use this skill already authorizes pushing the current feature branch to the
-verified SweatCharge GitHub `origin` and opening its draft PR; do not introduce a separate
+verified SweatCharge GitHub `origin` and opening its PR; do not introduce a separate
 confirmation gate. If authentication is unavailable, request only the required credential access.
-Never pretend a PR exists.
+Never pretend a PR exists, and never report a URL you did not receive from GitHub.
+
+Do not merge it, and do not close the issue it references. `Closes #<issue>` in the body lets the
+merge do that.

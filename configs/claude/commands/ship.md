@@ -10,32 +10,18 @@ The arguments are: "$ARGUMENTS" (optional: commit message or flags).
 - If there are no changes at all, inform the user and stop.
 - Run `git log --oneline -5` to see recent commit style.
 
-### 2. Detect if this is a Parcel Perform project
-
-Check if the **repository name** (from `basename $(git rev-parse --show-toplevel)`) starts with `pp_`.
-
-If yes, this is a **PP project** — apply the PP Git naming convention (see section below).
-If no, use standard commit conventions.
-
-### 3. Stage changes
+### 2. Stage changes
 
 - Show a summary of all changes (files added, modified, deleted).
 - Stage all relevant changes with `git add` (prefer specific files over `git add -A`; never stage `.env`, credentials, or secrets).
 
-### 4. Craft the commit message
+### 3. Craft the commit message
 
-**For PP projects**, the commit message MUST include the Jira issue ID in brackets at the beginning:
-```
-git commit -m "[JIRA-123] Your message"
-```
-- Extract the Jira issue ID from the **current branch name** (the branch should start with or contain a Jira issue ID like `HEIMDALL-1804`, `COD-123`, etc.).
-- If the branch name does not contain a recognizable Jira issue ID, ask the user for it.
+Write a concise conventional commit message summarizing the changes.
 
-**For non-PP projects**, write a concise conventional commit message summarizing the changes.
+If `$ARGUMENTS` is provided and looks like a commit message, use it.
 
-If `$ARGUMENTS` is provided and looks like a commit message, use it (but still prepend the Jira ID for PP projects).
-
-### 5. Commit
+### 4. Commit
 
 Create the commit. Append the co-author trailer:
 ```
@@ -45,21 +31,21 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Use a HEREDOC to pass the message:
 ```bash
 git commit -m "$(cat <<'EOF'
-[JIRA-ID] Your commit message
+Your commit message
 
 Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 EOF
 )"
 ```
 
-### 6. Push
+### 5. Push
 
 - Determine the current branch with `git branch --show-current`.
 - Check if the branch has an upstream with `git rev-parse --abbrev-ref @{upstream} 2>/dev/null`.
 - If no upstream exists, push with `-u`: `git push -u origin <branch>`.
 - If upstream exists, push with `git push`.
 
-### 7. Summary
+### 6. Summary
 
 Show a short summary:
 ```
@@ -67,23 +53,6 @@ Committed: <short hash> <commit message>
 Pushed to: origin/<branch>
 Files changed: <count>
 ```
-
-## PP Git Naming Convention (Parcel Perform projects)
-
-When the repo name starts with `pp_`, follow these rules:
-
-### Branch naming
-- **Feature for dev/master**: `jira-issue-id-explanation` (e.g., `HEIMDALL-1804-add-webhook-retry`)
-- **Feature for squad env**: `jira-issue-id-squad_name-explanation` (e.g., `COD-123-cod-new-featureX`)
-- **Hotfix for production**: `hotfix-jira-issue-id-explanation` (e.g., `hotfix-HEIMDALL-1804-fix-null-pointer`)
-
-### Commit message
-- MUST contain the Jira issue ID in brackets at the beginning: `[HEIMDALL-1804]`
-- Format: `[JIRA-ID] Description of change`
-
-### Important
-- The `/ship` command does NOT create or rename branches — it only commits and pushes on the current branch.
-- If on a PP project and the current branch is `master` or `main`, warn the user that they should be on a feature branch and ask for confirmation before proceeding.
 
 ## Important rules
 

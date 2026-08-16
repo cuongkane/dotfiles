@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clarify SweatCharge Issue"
+  short_description: "Decide if a request is ready to build"
+  default_prompt: "Use $clarify-sweatcharge-issue to decide whether this request can be implemented unattended: <paste the request>."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Respond to SweatCharge Review"
+  short_description: "Address review feedback and push fixes"
+  default_prompt: "Use $respond-sweatcharge-review to address the review feedback on pull request #<number>."

@@ -1,26 +1,31 @@
 ---
 name: implement-sweatcharge-feature
-description: Implement a vague feature request end-to-end in the SweatCharge workspace at /Users/lexuancuong/CUONG/SWC, across its Python/Django backend and Angular/TypeScript frontend as needed. Use when the user asks to implement, build, add, or change product behavior without a fully specified ticket. Creates an isolated git worktree first, then autonomously runs OpenSpec explore, propose, apply, testing, review, spec sync, archive, and opens a draft GitHub pull request. Stops only for material ambiguity.
-version: 1.0.0
+description: Implement a feature request end-to-end in the SweatCharge workspace at /Users/lexuancuong/CUONG/SWC, across its Python/Django backend and Angular/TypeScript frontend as needed. Use when the user asks to implement, build, add, or change product behavior, or when a GitHub issue is labelled agent:ready-to-implement. Creates an isolated git worktree first, then autonomously runs OpenSpec explore, propose, apply, testing, review, spec sync, archive, and opens a GitHub pull request ready for review. Stops only for material ambiguity.
+version: 2.0.0
 ---
 
 # Implement SweatCharge Feature
 
-Turn a rough feature request into a reviewed draft GitHub pull request for SweatCharge.
+Turn a feature request into a reviewed GitHub pull request for SweatCharge.
 
 ## Operating contract
 
 - Treat the user's prompt as the feature brief.
+- When the brief arrives from `clarify-sweatcharge-issue`, it supersedes the original request:
+  its ambiguities have already been put to a human and answered. Where the two disagree, the
+  refined brief wins, and its recorded assumptions carry into the OpenSpec proposal.
 - Work only in `/Users/lexuancuong/CUONG/SWC`.
 - Make creating an isolated worktree the first task and first mutation.
 - After creating it, run every read, edit, build, test, git, OpenSpec, and GitHub command from the worktree.
 - Progress autonomously. Do not add routine approval gates.
 - Pause only for material ambiguity, as defined below.
 - Archive the completed OpenSpec change after syncing it to the main specs.
-- Open a **draft GitHub pull request**, never a GitLab MR or a ready-for-review PR.
+- Open a GitHub pull request **ready for review**, never a GitLab MR and never a draft. Review is
+  a separate step with its own agent (`respond-sweatcharge-review`); a draft would sit unseen.
+- Never merge the pull request, mark it otherwise, or close its issue. Merging is the human's.
 - Treat the user's request to use this skill as explicit authorization to push the feature branch
-  created for that request to the verified SweatCharge `origin` remote and open its draft pull
-  request. This authorization covers the requested feature's committed code and specifications;
+  created for that request to the verified SweatCharge `origin` remote and open its pull request.
+  This authorization covers the requested feature's committed code and specifications;
   do not ask for a second push confirmation.
 - Before pushing, verify that `origin` resolves to `github.com:cuongkane/sweatcharge.git` (SSH or
   HTTPS form). Pause if it points anywhere else or if the branch contains unrelated changes.
@@ -38,7 +43,7 @@ Follow [references/workflow.md](references/workflow.md) phase by phase:
 6. Review the complete branch diff and fix important findings.
 7. Sync delta specs using `openspec-sync-specs`.
 8. Archive the completed change using `openspec archive`.
-9. Commit, push, and open a draft GitHub pull request.
+9. Commit, push, and open a GitHub pull request ready for review.
 
 The OpenSpec skills live in the target repository at `.claude/skills/<name>/SKILL.md` and are
 invoked with the Skill tool by bare name (`openspec-explore`, `openspec-propose`,
@@ -87,7 +92,7 @@ Do not claim completion unless:
 - the completed OpenSpec change is archived and all main specs pass strict validation;
 - the worktree contains no unrelated changes;
 - the branch is pushed; and
-- a draft GitHub pull request URL is returned.
+- a GitHub pull request URL is returned, taken from GitHub's own output rather than predicted.
 
 Report the worktree path, branch, OpenSpec change name, changed areas, verification results,
-specs synchronized, archive location, and draft PR URL.
+specs synchronized, archive location, and pull request URL.

@@ -29,12 +29,14 @@ This authorization is limited to the feature branch created for the current requ
 authorize pushing unrelated commits, force-pushing, changing remotes, or publishing to another
 repository.
 
-## Draft pull request
+## Pull request
 
-Resolve the base branch from `origin/HEAD`, falling back to `master`. Use `gh` and open a draft:
+Resolve the base branch from `origin/HEAD`, falling back to `master`. Use `gh` and open it ready
+for review — not a draft, because review is a separate step with its own agent and a draft would
+sit unseen:
 
 ```bash
-gh pr create --draft --base "<base>" --head "feature/<slug>" \
+gh pr create --base "<base>" --head "feature/<slug>" \
   --title "<clear feature title>" \
   --body-file "<temporary-pr-body-file>"
 ```
@@ -43,9 +45,12 @@ The body must include:
 
 - Summary
 - User-visible behavior
+- `Closes #<issue>` when the work came from a GitHub issue, so merging closes it
 - OpenSpec change name, synchronized specs, and archive location
 - Backend/frontend implementation notes
 - Test and verification commands with results
 - Migration, compatibility, rollout, or residual-risk notes
+- Assumptions carried in from the brief, so they surface in review rather than in production
 
-Do not mark the PR ready for review. Return the real URL emitted by GitHub.
+Do not merge the pull request and do not close its issue. Return the real URL emitted by GitHub;
+never construct or predict one, because downstream automation follows that number.

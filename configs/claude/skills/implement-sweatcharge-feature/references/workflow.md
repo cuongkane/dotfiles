@@ -157,9 +157,12 @@ the last successful build.
 ## 9. Deliver
 
 Read [github-delivery.md](github-delivery.md). Inspect the final status and diff, commit coherent
-changes, push the feature branch, and open a draft GitHub pull request.
+changes, push the feature branch, and open a GitHub pull request ready for review.
 
 The request to use this skill already authorizes pushing the current feature branch to the
-verified SweatCharge GitHub `origin` and opening its draft PR; do not introduce a separate
+verified SweatCharge GitHub `origin` and opening its PR; do not introduce a separate
 confirmation gate. If authentication is unavailable, request only the required credential access.
-Never pretend a PR exists.
+Never pretend a PR exists, and never report a URL you did not receive from GitHub.
+
+Do not merge it, and do not close the issue it references. `Closes #<issue>` in the body lets the
+merge do that.

@@ -37,6 +37,18 @@ trust_level = "trusted"
 [projects."/Users/lexuancuong/Documents/Codex/2026-07-25/chrome-plugin-chrome-openai-bundled-file"]
 trust_level = "trusted"
 
+[projects."/Users/lexuancuong"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/CUONG/CODLIS"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/CUONG/DAGU"]
+trust_level = "trusted"
+
+[projects."/private/tmp/dagu-agent/89/clarify"]
+trust_level = "trusted"
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 4
@@ -63,14 +75,14 @@ source_type = "local"
 source = "/Users/lexuancuong/PP/parcel-perform/claude-code-boilerplate"
 
 [marketplaces.academic-research-skills]
-last_updated = "2026-07-31T14:50:54Z"
-last_revision = "2cf3a51e159458b7a8c8784bb874248e79601f7b"
+last_updated = "2026-08-14T11:25:39Z"
+last_revision = "bb13f7818ca85fa6397dd47c2f2f994c3f03d78a"
 source_type = "git"
 source = "https://github.com/Imbad0202/academic-research-skills.git"
 
 [marketplaces.claude-plugins-official]
-last_updated = "2026-07-31T14:51:04Z"
-last_revision = "28f95cb71b5382974561e51d593a852766a9d4b9"
+last_updated = "2026-08-14T13:57:07Z"
+last_revision = "67f1c1df422333345f1c60d83c79f96e37db5a22"
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
@@ -157,8 +169,13 @@ args = ["mcp"]
 cwd = "."
 enabled = false
 
-[mcp_servers.grafana]
-url = "https://mcp.parcelperform.dev/grafana/"
+[mcp_servers.atlassian]
+url = "https://mcp.atlassian.com/v1/sse"
+enabled = false
+
+[mcp_servers.sentry]
+url = "https://mcp.sentry.dev/mcp"
+enabled = false
 
 [shell_environment_policy.set]
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
