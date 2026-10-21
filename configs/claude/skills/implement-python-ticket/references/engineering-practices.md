@@ -88,13 +88,19 @@ YAGNI/KISS win ties: the smallest clear solution beats a pattern-heavy one.
   one caller's need (it changes behavior for every other caller); adapt at your
   call site instead (e.g. guard `None` before calling, rather than broadening the
   util's `except`).
-- **Comments explain *why*, not *what*.** The code already says what. This cuts both ways:
-  - **Owed a comment:** any value a reader cannot derive from the line itself — a protocol
-    header, a magic timeout, a cache directive, a deliberate deviation from a convention. State
-    the consequence of removing it ("without this, nginx buffers the stream and delivers it all
-    at once"), not the mechanism.
-  - **Not owed one:** a comment whose claim the reader can't act on, or that narrates the call
-    below it. If you can't finish the sentence "this matters because…", delete it.
+- **Comments: default to none.** Make the code say it first, with a better name, a named
+  constant, or an extracted function. Write a comment only when the code *cannot* express it,
+  and keep it to one short line.
+  - **Owed a comment:** a *why* that the line can't show — a protocol header, a magic timeout,
+    a cache directive, a deliberate deviation from a convention, a workaround for an external
+    bug. State the consequence of removing it ("without this, nginx buffers the stream"), not
+    the mechanism.
+  - **Never write:** comments that restate or narrate the code (`# get the user`, `# loop over
+    items`), section banners, docstrings that only repeat the function name and signature,
+    references to the ticket or the change itself ("added for PROJ-123", "new logic"), or
+    claims the reader can't act on. If you can't finish the sentence "this matters
+    because…", delete it.
+  - Match the surrounding module's comment density; never add more than it already has.
 - **Readable > clever.**
 
 ## Find where this kind of thing already lives

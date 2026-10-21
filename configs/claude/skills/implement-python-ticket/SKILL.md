@@ -1,7 +1,7 @@
 ---
 name: implement-python-ticket
 description: Implement a Jira ticket in a Python backend end-to-end and open a draft GitLab MR. Enforces a gated flow — clarify requirements → implementation plan (approval gate) → code → tests (one per changed path & acceptance criterion) → draft MR following Inspectorio GIT conventions. Use when given a Jira ticket ID/URL and asked to implement it, "pick up ticket ...", or "open an MR for ...".
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Implement Python Ticket
@@ -21,6 +21,7 @@ Phase 1  Clarify requirements   (ticket only — do NOT read code yet)
 ========= GATE A: requirements confirmed =========   ← STOP, wait for user
              ▼
 Phase 2  Implementation plan
+             │  (2a locate — Explore/haiku, paths only; 2b plan — Plan/sonnet)
              │  (files, approach, test list, risks)
              ▼
 ========= GATE B: plan approved =================   ← STOP, wait for user
@@ -62,11 +63,16 @@ everything interactive.
 
 - **Main session owns:** Phase 1 (needs the user + Atlassian MCP), **GATE A**, **GATE B**, and
   Phase 6 (final MR + report).
-- **Dispatched to subagents:** Phase 2 (a read-only `Plan` agent, dispatched with
-  `model: "sonnet"` → returns a compact plan),
-  Phase 3 (a `general-purpose` agent → writes code, returns a changed-files summary), Phase 4 (a
-  separate `general-purpose` agent → writes/runs tests, returns a diff→test map). Phase 5 already
-  dispatches a review agent.
+- **Dispatched to subagents:** Phase 2a (an optional `Explore` agent, `model: "haiku"` → returns a
+  path list only), Phase 2b (a read-only `Plan` agent, `model: "sonnet"` → returns a compact plan),
+  Phase 3 (a `general-purpose` agent, `model: "sonnet"` → writes code, returns a changed-files
+  summary), Phase 4 (a separate `general-purpose` agent, `model: "sonnet"` → writes/runs tests,
+  returns a diff→test map). Phase 5 already dispatches a review agent.
+
+- **Always pass `model:` explicitly on Phases 2–4.** With no `model` argument a subagent inherits
+  the main session's model, which is typically the largest and most expensive tier — these phases
+  are read-heavy or execute an already-approved spec, so they don't need it. **Phase 5 is the
+  exception:** review is judgement-bound, so leave it un-pinned.
 - **Subagents share the working tree** (default filesystem — *not* an isolated worktree), so code
   and tests persist on the branch the main session later pushes.
 - **Subagents never cross a gate.** They cannot ask the user; a subagent that hits a new ambiguity
@@ -106,19 +112,21 @@ Follow `references/workflow.md` for the exact steps and commands of each phase. 
    written, or needs clarification). **GATE A:** wait for the user to confirm/answer before
    planning.
 
-2. **Implementation plan.** *(run in a `Plan` subagent with `model: "sonnet"`)* *Now* explore the codebase. Produce a concise plan: files to change,
+2. **Implementation plan.** *(optionally locate files first in an `Explore` subagent with
+   `model: "haiku"` — paths only; then plan in a `Plan` subagent with `model: "sonnet"`)* *Now* explore the codebase. Produce a concise plan: files to change,
    the approach, edge cases, and the **explicit list of test cases** you will write (one behavior
    each). Call out risks and anything out of scope. If the code exposes a new ambiguity, return
    to GATE A. **GATE B:** wait for explicit approval ("approved", "go") before writing any code.
 
-3. **Code.** *(run in a `general-purpose` subagent; main session creates the branch first)*
+3. **Code.** *(run in a `general-purpose` subagent with `model: "sonnet"`; main session creates the branch first)*
    Create the branch (`references/git-conventions.md`), then implement the smallest
    change that satisfies the approved plan, to the standards in
    `references/engineering-practices.md` (layered separation, SOLID applied pragmatically, clean
    names, real error handling, security, edge cases). Match surrounding code style. No unrelated
-   edits.
+   edits. No redundant comments: comment only a *why* the code cannot express, in one short
+   line. Never narrate *what* the code does.
 
-4. **Tests.** *(run in a separate `general-purpose` subagent)* Write tests to the standards in `references/testing-standards.md`. Aim: **a test
+4. **Tests.** *(run in a separate `general-purpose` subagent with `model: "sonnet"`)* Write tests to the standards in `references/testing-standards.md`. Aim: **a test
    for every new/changed code path and every acceptance criterion** — cover happy path, each
    branch/error path, and the in-scope edge cases. Verify by *reasoning through the diff*
    (map each change → its test), not by running a coverage tool; running local diff-coverage is

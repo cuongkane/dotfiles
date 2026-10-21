@@ -51,11 +51,23 @@ code) until the requirements are settled.
 **Goal:** an approved design and an explicit test list.
 
 ### Dispatch (context isolation)
-Run this phase in a **`Plan` subagent** (read-only) so the codebase exploration does not bloat the
-main session. Dispatch it with **`model: "sonnet"` explicitly** — code reading is high-volume and
-low-judgement, so it does not need the session's default (larger) model. Pass it:
+
+**Step 2a — locate (optional, `Explore` + `model: "haiku"`).** If you don't already know where the
+change lives, first dispatch an **`Explore` subagent with `model: "haiku"`** for pure location
+lookup: which modules/files own the relevant behaviour, which sibling file a new file would sit
+next to, and where the existing tests for that area live. This is high-volume, low-judgement
+reading — the cheapest model is the right one. Require it to return **paths and one-line
+descriptions only** (no code excerpts, no design opinions, no recommendations); anything resembling
+a judgement call is Step 2b's job. Skip this step for a change whose location is already obvious
+from Phase 1.
+
+**Step 2b — plan (`Plan` + `model: "sonnet"`).** Run the planning itself in a **`Plan` subagent**
+(read-only) so the codebase exploration does not bloat the main session. Dispatch it with
+**`model: "sonnet"` explicitly** — never let it inherit the session model, which may be a larger
+and far more expensive tier. Pass it:
 - the **confirmed requirements / acceptance criteria** from Phase 1 (the GATE-A-approved
-  restatement), the ticket summary, and the target branch.
+  restatement), the ticket summary, and the target branch,
+- the **path list from Step 2a**, if it ran, so it starts from known files instead of re-searching.
 
 Require the subagent to return a **compact plan** in the shape below (no raw file dumps) **plus an
 `ambiguities` list**:
@@ -101,8 +113,10 @@ If the user requests changes, revise and re-present.
 ### Dispatch (context isolation)
 The **main session** first confirms a clean tree and **creates the branch**
 (`references/git-conventions.md`) so the subagent codes on the right branch. Then dispatch a
-**`general-purpose` subagent** on the **default filesystem** — *not* an isolated worktree, so the
-change persists on the branch the main session later pushes. Pass it:
+**`general-purpose` subagent** with **`model: "sonnet"` explicitly**, on the **default filesystem**
+— *not* an isolated worktree, so the change persists on the branch the main session later pushes.
+Pin the model rather than inheriting: the plan is already approved, so this phase is execution
+against a fixed spec and does not need a larger tier. Pass it:
 - the **approved plan** (from GATE B), a pointer to `references/engineering-practices.md`, and the
   branch name.
 
@@ -123,13 +137,18 @@ landed, rather than holding the subagent's file-read history.
 4. Match the surrounding code's style, naming, and idioms. No opportunistic refactors outside the
    plan — if you spot one, note it for a follow-up ticket instead.
 5. Keep the diff reviewable: cohesive, no dead code, no debug prints, no commented-out blocks.
+6. **No redundant comments.** Before returning, read every comment and docstring you added
+   (`git diff | grep '^+.*#'`) and delete any that restates the code, narrates a step, or
+   mentions the ticket or change. Keep only short *why* comments the code cannot express
+   (see "Comments" in `references/engineering-practices.md`).
 
 ---
 
 ## Phase 4 — Tests
 
 ### Dispatch (context isolation)
-Dispatch a **separate `general-purpose` subagent** (default filesystem) for tests. Pass it:
+Dispatch a **separate `general-purpose` subagent** (default filesystem) with **`model: "sonnet"`
+explicitly** for tests. Pass it:
 - the **approved test plan** and the **acceptance criteria**, and instruct it to derive the
   changed surface from `git diff` against the merge-base of the target branch (it re-reads the
   code from the branch, not from any main-session transcript).
@@ -174,6 +193,11 @@ Follow `references/testing-standards.md`. In short:
    - a repo-local skill at `./.claude/skills/code-review/` (invoke it),
    - a global `code-review` skill, or a `code-reviewer` / `code-review` **agent** (dispatch it),
    - otherwise the built-in `/code-review`.
+
+   **Do not pin a cheaper model here.** Unlike Phases 2–4, review is the judgement-bound phase —
+   let the reviewer use its own definition's model or inherit the session's. Downgrading it trades
+   a small token saving for missed findings.
+
    If none is available, do a structured self-review against the diff using the
    `references/engineering-practices.md` standards (layered separation & injectability,
    SOLID/YAGNI/KISS/DRY, naming & constants, error handling, security, edge cases, diff hygiene)

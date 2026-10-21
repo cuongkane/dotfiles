@@ -30,6 +30,7 @@ brew "claude-squad"
 brew "rtk"
 brew "gnupg"
 brew "tldr"
+brew "tree-sitter-cli"
 brew "derailed/k9s/k9s"
 
 # ZSH
@@ -49,7 +50,7 @@ brew "coursier"
 # 3. Applications (Casks)
 # ----------------------------
 cask "google-chrome"
-cask "docker"
+cask "rancher"
 cask "postman"
 cask "font-jetbrains-mono"
 cask "ngrok"

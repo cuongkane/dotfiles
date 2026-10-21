@@ -20,3 +20,8 @@
 # keeps the company identity above. Placed last so it overrides the default.
 [includeIf "gitdir:~/KANE/"]
 	path = ~/KANE/dotfiles/configs/git/gitconfig-personal
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
