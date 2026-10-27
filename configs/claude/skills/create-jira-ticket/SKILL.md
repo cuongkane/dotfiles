@@ -1,6 +1,6 @@
 ---
 name: create-jira-ticket
-description: Write or rewrite a Jira ticket (Story/Bug) so it describes end-user behavior instead of code. Produces the Inspectorio house format — user-story Problem statement → bulleted Requirement → numbered GIVEN/WHEN/THEN acceptance criteria — silently checked against INVEST and SMART, then edited in place via the Atlassian MCP. Use when asked to create a ticket, write a story, "update this ticket", "make this ticket focus on user behavior", or "add acceptance criteria".
+description: Write or rewrite a Jira Story ticket so it describes end-user behavior instead of code. Produces the Inspectorio house format — user-story Problem statement → bulleted Requirement → numbered GIVEN/WHEN/THEN acceptance criteria — silently checked against INVEST and SMART, then edited in place via the Atlassian MCP. Use when asked to create a ticket, write a story, "update this ticket", "make this ticket focus on user behavior", or "add acceptance criteria". For bug tickets use create-jira-bug instead.
 version: 1.1.0
 ---
 
