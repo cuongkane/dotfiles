@@ -2,7 +2,7 @@
 	ff = only
 [user]
 	name = Cuong (Kane) Le
-	email = cuong.le@inspectorio.com
+	email = cuongle.software@gmail.com
 	signingkey = 5008D0EFA326B408
 [core]
 	autocrlf = false

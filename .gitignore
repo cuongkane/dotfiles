@@ -11,3 +11,8 @@ AWSCLIV2.pkg
 # Remove the directory (and this entry) after running the manual migration
 # that restores ~/.claude as a real directory.
 configs/claude/home/
+
+# Claude Code runtime state inside the symlinked skills dir: claude.ai
+# skill sync buckets and deleted-skill trash. Regenerated automatically.
+configs/claude/skills/synced/
+configs/claude/skills/.trash/

@@ -46,7 +46,7 @@ The body must include:
 - Summary
 - User-visible behavior
 - `Closes #<issue>` when the work came from a GitHub issue, so merging closes it
-- OpenSpec change name, synchronized specs, and archive location
+- OpenSpec change name, synchronized specs, and confirmation that its change directory was removed
 - Backend/frontend implementation notes
 - Test and verification commands with results
 - Migration, compatibility, rollout, or residual-risk notes

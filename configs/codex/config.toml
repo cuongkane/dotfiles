@@ -64,13 +64,33 @@ trust_level = "trusted"
 [projects."/Users/cuong.le/INSPECTORIO"]
 trust_level = "trusted"
 
+[projects."/Users/lexuancuong/CUONG/BLOG"]
+trust_level = "trusted"
+
+[projects."/Users/lexuancuong/CUONG/CV"]
+trust_level = "trusted"
+
+[tui]
+screen_reader_detection_done = true
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 4
 gpt-6-astra = 4
+"gpt-6.1-sol" = 4
+
+[hooks.state]
+
+[hooks.state."academic-research-skills@academic-research-skills:hooks/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:0f1b53067103c5b4bd1dac1c951d9148f14b164b4240aa3c9d21171caed2ca01"
+
+[hooks.state."/Users/lexuancuong/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:dbfdde9088490838163fc41380562debe8f7dbcb206106437962ede1424bb0a3"
+
+[hooks.state."academic-research-skills@academic-research-skills:hooks/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:ec70cf5a9224931739c39e8ee3146d7905e7b6b39d38c7660320462ac7acef6b"
 
 [marketplaces.openai-bundled]
-last_updated = "2026-07-25T09:32:07Z"
 source_type = "local"
 source = "/Users/lexuancuong/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -79,19 +99,21 @@ last_updated = "2026-07-25T04:11:38Z"
 source_type = "local"
 source = "/Users/lexuancuong/PP/parcel-perform/claude-code-boilerplate"
 
+[marketplaces.academic-research-skills]
+last_updated = "2026-10-24T17:32:13Z"
+last_revision = "c986dec6f0fe4871431f72c04ec9c48d6685a1d5"
+source_type = "git"
+source = "https://github.com/Imbad0202/academic-research-skills.git"
+
 [marketplaces.claude-plugins-official]
-last_updated = "2026-08-25T10:19:40Z"
-last_revision = "b819188d2eea14e0400556ca29dbd1179a7c595b"
+last_updated = "2026-10-24T17:32:25Z"
+last_revision = "58267944f92187b7d6a1c822165c96c81c864806"
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-07-29T01:22:56Z"
 source_type = "local"
 source = "/Users/lexuancuong/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
-
-[plugins."sites@openai-bundled"]
-enabled = true
 
 [plugins."visualize@openai-bundled"]
 enabled = true
@@ -138,8 +160,37 @@ enabled = true
 [plugins."chrome@openai-bundled"]
 enabled = true
 
+[plugins."codex-app-tools@openai-bundled"]
+enabled = true
+
+[plugins."unified-computer-use@openai-bundled"]
+enabled = true
+
 [features]
 js_repl = false
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+env_vars = ["BROWSER_USE_ACCESS_EXECUTOR_ID", "BROWSER_USE_ACCESS_PIPE_PATH", "BROWSER_USE_ACCESS_VERIFYING_IDENTITY"]
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/lexuancuong/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+CODEX_HOME = "/Users/lexuancuong/.codex"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab,mcpapps"
+BROWSER_USE_TINYSKY_ENABLED = "1"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = ""
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = ""
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = ""
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.1027.30824"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/lexuancuong/.codex/plugins/cache/openai-bundled/browser/26.1027.30824/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
+SKY_CUA_SERVICE_PATH = "/Users/lexuancuong/.codex/computer-use/Codex Computer Use.app"
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex"
 
 [mcp_servers.computer-use]
 command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
@@ -156,12 +207,13 @@ url = "https://mcp.sentry.dev/mcp"
 enabled = false
 
 [shell_environment_policy.set]
-BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f,e13fd947e846d3d306e9249dd3c73d14931b6494803dbafb16cef85e6add9506"
-NODE_REPL_TRUSTED_CODE_PATHS = "/Users/lexuancuong/.codex"
 
 [desktop]
 conversationDetailMode = "STEPS_COMMANDS"
 ambient-suggestions-enabled = true
 keepRemoteControlAwakeWhilePluggedIn = true
 followUpQueueMode = "queue"
+
+[notice]
+hide_rate_limit_model_nudge = true

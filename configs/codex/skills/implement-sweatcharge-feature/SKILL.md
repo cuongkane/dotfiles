@@ -1,6 +1,6 @@
 ---
 name: implement-sweatcharge-feature
-description: Implement a feature request end-to-end in the SweatCharge workspace at /Users/lexuancuong/CUONG/SWC, across its Python/Django backend and Angular/TypeScript frontend as needed. Use when the user asks to implement, build, add, or change product behavior, or when a GitHub issue is labelled agent:ready-to-implement. Creates an isolated git worktree first, then autonomously runs OpenSpec explore, propose, apply, testing, review, spec sync, archive, and opens a GitHub pull request ready for review. Stops only for material ambiguity.
+description: Implement a feature request end-to-end in the SweatCharge workspace at /Users/lexuancuong/CUONG/SWC, across its Python/Django backend and Angular/TypeScript frontend as needed. Use when the user asks to implement, build, add, or change product behavior, or when a GitHub issue is labelled agent:ready-to-implement. Creates an isolated git worktree first, then autonomously runs OpenSpec explore, propose, apply, testing, review, spec sync, removes the completed change, and opens a GitHub pull request ready for review. Stops only for material ambiguity.
 ---
 
 # Implement SweatCharge Feature
@@ -18,7 +18,7 @@ Turn a feature request into a reviewed GitHub pull request for SweatCharge.
 - After creating it, run every read, edit, build, test, git, OpenSpec, and GitHub command from the worktree.
 - Progress autonomously. Do not add routine approval gates.
 - Pause only for material ambiguity, as defined below.
-- Archive the completed OpenSpec change after syncing it to the main specs.
+- Remove the completed OpenSpec change after syncing it to the main specs.
 - Open a GitHub pull request **ready for review**, never a GitLab MR and never a draft. Review is
   a separate step with its own agent (`respond-sweatcharge-review`); a draft would sit unseen.
 - Never merge the pull request, mark it otherwise, or close its issue. Merging is the human's.
@@ -41,7 +41,7 @@ Follow [references/workflow.md](references/workflow.md) phase by phase:
    run the frontend production build after implementation.
 6. Review the complete branch diff and fix important findings.
 7. Sync delta specs using `openspec-sync-specs`.
-8. Archive the completed change using `openspec archive`.
+8. Remove the completed change directory after verifying the spec sync.
 9. Commit, push, and open a GitHub pull request ready for review.
 
 Read these references when entering the corresponding phases:
@@ -83,10 +83,10 @@ Do not claim completion unless:
   validation have passed, or failures are truthfully disclosed;
 - root OpenSpec main specs and affected frontend Feature RFCs are synchronized with the shipped
   behavior;
-- the completed OpenSpec change is archived and all main specs pass strict validation;
+- the completed OpenSpec change directory is removed and all main specs pass strict validation;
 - the worktree contains no unrelated changes;
 - the branch is pushed; and
 - a GitHub pull request URL is returned, taken from GitHub's own output rather than predicted.
 
 Report the worktree path, branch, OpenSpec change name, changed areas, verification results,
-specs synchronized, archive location, and pull request URL.
+specs synchronized, change removal, and pull request URL.

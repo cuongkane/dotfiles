@@ -120,36 +120,32 @@ Invoke `openspec-sync-specs` (`.claude/skills/openspec-sync-specs/SKILL.md`) wit
 change name. Confirm the merge is idempotent and preserves unrelated requirements.
 
 Also update any affected frontend Feature RFC required by `sweatcharge_fe/AGENTS.md` and its
-current spec guide. Re-run strict OpenSpec validation before archiving.
+current spec guide. Re-run strict OpenSpec validation before removing the change.
 
-## 8. Archive the OpenSpec change
+## 8. Remove the OpenSpec change
 
 After implementation, tests, review, Feature RFC updates, and spec sync are complete:
 
 1. Confirm every task is checked off.
 2. Run `openspec status --change "<change>"` and resolve incomplete artifacts or tasks.
 3. Run `openspec validate "<change>" --strict`.
-4. Archive non-interactively with the explicit change name:
+4. Confirm the synchronized main specs contain the completed requirements, then remove only
+   the active directory for this change:
 
    ```bash
-   openspec archive "<change>" --yes
+   rm -r "openspec/changes/<change>"
    ```
 
-Use the CLI directly here. The repository's `openspec-archive-change` skill prompts the user to
-pick a change and to confirm warnings, which conflicts with this skill's autonomous contract.
-
-Do not use `--skip-specs` or `--no-validate`. The prior sync makes the archive's spec update
-idempotent and gives the CLI a final consistency check.
-
-Verify that the active change no longer appears in `openspec list --json`, locate its archived
-directory, and run:
+Check that the path is the current change directory under `openspec/changes/` before deleting it.
+Do not remove other active changes or create an archive copy. Verify that the change no longer
+appears in `openspec list --json`, then run:
 
 ```bash
 openspec validate --specs --strict --no-interactive
 ```
 
-If archiving or post-archive validation fails, fix the artifacts or main specs before delivery.
-Do not open the pull request while the completed change remains unarchived.
+If removal or post-removal validation fails, fix the artifacts or main specs before delivery.
+Do not open the pull request while the completed change directory remains.
 Before delivery, confirm the recorded frontend production build corresponds to the current
 `HEAD`/working-tree source state. Run it again if any frontend code or build input changed since
 the last successful build.
