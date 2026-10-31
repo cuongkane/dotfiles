@@ -61,6 +61,9 @@ function _zshrc_deferred() {
 if [[ -z $ZSH_EXECUTION_STRING && -o zle && -f $ZSH/custom/plugins/zsh-defer/zsh-defer.plugin.zsh ]]; then
     source $ZSH/custom/plugins/zsh-defer/zsh-defer.plugin.zsh
     zsh-defer _zshrc_deferred
+    # zsh-vi-mode loads after the first line has started, so it never sets that
+    # line's insert-mode cursor. Show the beam (its insert cursor) right away.
+    print -n '\e[5 q'
 else
     _zshrc_deferred
 fi
