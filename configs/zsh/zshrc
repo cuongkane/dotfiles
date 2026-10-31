@@ -17,10 +17,11 @@ HIST_STAMPS="yyyy-mm-dd"
 #                                   Plugins
 # =============================================================================
 
-# For plugins were installed with homebrew
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh # Command suggestions
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # Syntax highlighting
-source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh # Vi mode on terminal
+# Plugins are lazy-loaded with zsh-defer: the prompt is drawn first, then
+# _zshrc_deferred runs while the shell waits for the first keystroke.
+
+# HOMEBREW_PREFIX comes from `brew shellenv` in ~/.zprofile; avoid spawning `brew --prefix`.
+HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/opt/homebrew}"
 plugins=(
     git                     # Git integration
     docker                  # Docker commands
@@ -28,7 +29,41 @@ plugins=(
     fzf                     # Fuzzy finder
 )
 fpath=($fpath ~/.zsh/completion)
-source $ZSH/oh-my-zsh.sh
+# Docker CLI completions. Added before Oh-My-Zsh so its single compinit picks them up.
+fpath=("$HOME/.docker/completions" $fpath)
+# History settings must exist when .zshrc returns, because zsh loads the history file then.
+source $ZSH/lib/history.zsh
+# zsh-defer runs tasks with local options, so Oh-My-Zsh's setopt calls would be undone.
+# These are the options its lib/ sets.
+setopt always_to_end auto_cd auto_pushd complete_in_word interactive_comments long_list_jobs pushd_ignore_dups pushd_minus
+unsetopt flow_control
+
+function _zshrc_deferred() {
+    # Keep our aliases over Oh-My-Zsh plugin aliases (e.g. git's `gl`).
+    local user_aliases=$(alias -L)
+    source $ZSH/oh-my-zsh.sh
+    eval $user_aliases
+    # Vi mode must load after Oh-My-Zsh, whose key-bindings.zsh switches to emacs keys.
+    ZVM_INIT_MODE=sourcing
+    source $HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh # Vi mode on terminal
+    source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh # Command suggestions
+    # Setting ag as the default source for fzf
+    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+    eval "$(zoxide init zsh)"
+    # Shell command completion for gcloud.
+    if [ -f '/Users/lexuancuong/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/lexuancuong/google-cloud-sdk/completion.zsh.inc'; fi
+    # Must be sourced last.
+    source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # Syntax highlighting
+}
+
+# Defer only when a line editor will wait for input; `zsh -i -c` (editors, tools
+# snapshotting the shell) and a missing zsh-defer load everything immediately.
+if [[ -z $ZSH_EXECUTION_STRING && -o zle && -f $ZSH/custom/plugins/zsh-defer/zsh-defer.plugin.zsh ]]; then
+    source $ZSH/custom/plugins/zsh-defer/zsh-defer.plugin.zsh
+    zsh-defer _zshrc_deferred
+else
+    _zshrc_deferred
+fi
 
 # =============================================================================
 #                                   Environment
@@ -43,9 +78,6 @@ export CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1
 export GPG_TTY=$(tty)
 
 # FZF Configuration
-export FZF_DEFAULT_COMMAND='ag -g ""'
-export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
-
 export FZF_DEFAULT_COMMAND='ag -g ""'
 export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
 
@@ -78,9 +110,6 @@ export XDG_CONFIG_HOME="$HOME/.config" # Declare the config dir for Lazygit
 # MERMAID
 alias mermaid='docker run --publish 8000:8080 ghcr.io/mermaid-js/mermaid-live-editor'
 
-# Setting ag as the default source for fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 # =============================================================================
 #                                   PATH Setup
 # =============================================================================
@@ -102,7 +131,9 @@ export PATH="/opt/homebrew/opt/icu4c/bin:$PATH"
 
 # Homebrew
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
-eval "$(pyenv init --path)"
+# Same PATH effect as `pyenv init --path`, without its ~150ms `pyenv rehash`.
+# Run `pyenv rehash` manually after installing a new Python CLI.
+path=("$PYENV_ROOT/shims" ${path:#$PYENV_ROOT/shims})
 # Postgresql
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 export PATH="/opt/homebrew/opt/npm/bin:$PATH"
@@ -114,8 +145,6 @@ export NPM_REGISTRY_PROJECT_SCOPE=@saas
 
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH" # Volta is before Homebrew because node js issue
-# Zoxide
-eval "$(zoxide init zsh)"
 # =============================================================================
 #                                   Functions
 # =============================================================================
@@ -148,17 +177,9 @@ sync_project_venv_path
 # Rancher Desktop (dockerd/moby runtime) provides the docker & kubectl CLIs.
 export PATH="$HOME/.rd/bin:$PATH"
 
-# Docker CLI completions
-fpath=("$HOME/.docker/completions" $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
-
-
-# Load Angular CLI autocompletion.
-
 # opencode
-export PATH=/Users/lexuancuong/.opencode/bin:$PATHexport PATH=~/.npm-global/bin:$PATH
+export PATH=/Users/lexuancuong/.opencode/bin:$PATH
+export PATH=~/.npm-global/bin:$PATH
 
 # GeoDjango native libraries
 export DYLD_LIBRARY_PATH="/opt/homebrew/lib${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
@@ -167,15 +188,12 @@ export GDAL_LIBRARY_PATH="/opt/homebrew/lib/libgdal.dylib"
 export GEOS_LIBRARY_PATH="/opt/homebrew/lib/libgeos_c.dylib"
 # Apple strips DYLD_* when /bin/bash starts. Git's mypy hook uses `bash -c`,
 # so have non-interactive Bash restore the native-library environment.
-export BASH_ENV="$HOME/KANE/dotfiles/configs/zsh/bash_env"
+export BASH_ENV="$HOME/PP/dotfiles/configs/zsh/bash_env"
 
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/lexuancuong/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/lexuancuong/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/lexuancuong/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/lexuancuong/google-cloud-sdk/completion.zsh.inc'; fi
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/Users/cuong.le/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)

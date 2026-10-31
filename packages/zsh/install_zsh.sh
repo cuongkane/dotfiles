@@ -15,6 +15,14 @@ function install_ohmyzsh {
   else
     echo -e " ${GREEN}✓${NC} zsh-autosuggestions plugin is already installed"
   fi
+  # zsh-defer lazy-loads plugins in zshrc so the prompt appears immediately
+  if [ ! -d "$ZSH_CUSTOM/plugins/zsh-defer" ]; then
+    echo " 📦 Installing zsh-defer plugin..."
+    git clone https://github.com/romkatv/zsh-defer "$ZSH_CUSTOM/plugins/zsh-defer"
+    echo -e " ${GREEN}✓${NC} zsh-defer installed successfully"
+  else
+    echo -e " ${GREEN}✓${NC} zsh-defer plugin is already installed"
+  fi
 }
 
 install_ohmyzsh
